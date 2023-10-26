@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import DataLoader from '../../services/DataLoader/DataLoader';
+import DataLoader from '../../services/dataLoader/dataLoader';
 import { IAppProps, ICharacterData } from '../../types/types';
 import CharacterCard from './CharacterCard';
 
