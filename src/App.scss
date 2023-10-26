@@ -1,8 +1,11 @@
 #root {
+  width: 100vw;
   max-width: 1280px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  gap: 30px;
+  padding: 2rem 1rem;
   text-align: center;
+  box-sizing: border-box;
 }

@@ -8,11 +8,15 @@ class CharacterCard extends Component<ICharacterData> {
 
     return (
       <div className="character-card">
-        <img src={image}></img>
-        <div className="character-name">Name: {name}</div>
-        <div className="character-status">Status: {status}</div>
-        <div className="character-species">Species: {species}</div>
-        <div className="character-location">Location: {location.name}</div>
+        <div className="character-image">
+          <img src={image}></img>
+        </div>
+        <div className="character-name">{name}</div>
+        <div className="character-description">
+          <div className="character-status">Status: {status}</div>
+          <div className="character-species">Species: {species}</div>
+          <div className="character-location">Location: {location.name}</div>
+        </div>
       </div>
     );
   }
