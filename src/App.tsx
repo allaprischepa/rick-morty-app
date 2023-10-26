@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import './App.scss';
-import CharactersList from './components/Characters/CharactersList';
+import CharactersList from './components/CharactersList/CharactersList';
 import SearchBar from './components/SearchBar';
 
 const SEARCH_TERM_NAME = 'RMAppSearchTerm';

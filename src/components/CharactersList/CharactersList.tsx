@@ -1,7 +1,8 @@
 import { Component } from 'react';
 import DataLoader from '../../services/dataLoader/dataLoader';
 import { IAppProps, ICharacterData } from '../../types/types';
-import CharacterCard from './CharacterCard';
+import CharacterCard from '../CharacterCard/CharacterCard';
+import './CharactersList.scss';
 
 class CharactersList extends Component<
   Pick<IAppProps, 'searchTerm'>,

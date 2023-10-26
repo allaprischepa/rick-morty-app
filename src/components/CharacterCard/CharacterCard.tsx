@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { ICharacterData } from '../../types/types';
+import './CharacterCard.scss';
 
 class CharacterCard extends Component<ICharacterData> {
   render() {
