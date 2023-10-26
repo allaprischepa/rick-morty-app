@@ -1,15 +1,13 @@
 import { Component, FormEvent } from 'react';
+import { IAppProps } from '../types/types';
 
-interface AppProps {
-  searchTerm: string;
-  updateSearchTerm: (value: string) => void;
-}
+const SEARCH_INPUT_NAME = 'searchInput';
 
-class SearchBar extends Component<AppProps> {
+class SearchBar extends Component<IAppProps> {
   handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    const searchInput = event.currentTarget.elements.namedItem('searchInput');
+    const searchInput =
+      event.currentTarget.elements.namedItem(SEARCH_INPUT_NAME);
 
     if (searchInput instanceof HTMLInputElement) {
       this.props.updateSearchTerm(searchInput.value);
@@ -21,11 +19,11 @@ class SearchBar extends Component<AppProps> {
       <form className="search-bar" onSubmit={this.handleSubmit}>
         <input
           type="text"
-          name="searchInput"
+          name={SEARCH_INPUT_NAME}
           defaultValue={this.props.searchTerm}
           placeholder="Search"
-        ></input>
-        <input type="submit" value="Search"></input>
+        />
+        <input type="submit" value="Search" />
       </form>
     );
   }
