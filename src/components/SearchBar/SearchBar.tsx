@@ -1,5 +1,6 @@
 import { Component, FormEvent } from 'react';
-import { IAppProps } from '../types/types';
+import { IAppProps } from '../../types/types';
+import './SearchBar.scss';
 
 const SEARCH_INPUT_NAME = 'searchInput';
 
@@ -21,9 +22,10 @@ class SearchBar extends Component<IAppProps> {
           type="text"
           name={SEARCH_INPUT_NAME}
           defaultValue={this.props.searchTerm}
-          placeholder="Search"
+          placeholder="Type the name..."
+          className="search-input"
         />
-        <input type="submit" value="Search" />
+        <input type="submit" value="Search" className="search-button" />
       </form>
     );
   }
