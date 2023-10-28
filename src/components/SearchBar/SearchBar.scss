@@ -24,20 +24,13 @@
   }
 
   .search-button {
-    display: block;
     position: absolute;
     top: 0;
     right: 0;
     height: 30px;
     width: 30px;
     margin: 5px;
-    background-color: $gray-color;
-    border-radius: 2px;
-    border-style: none;
-    box-sizing: border-box;
-    color: white;
-    cursor: pointer;
-    outline: none;
+    padding: 6px;
 
     &::after {
       content: '';
@@ -49,16 +42,6 @@
       -webkit-mask: url('../../assets/icons/search.png') no-repeat center /
         contain;
       mask: url('../../assets/icons/search.png') no-repeat center / contain;
-    }
-
-    @media (hover: hover) {
-      &:hover {
-        opacity: 0.85;
-      }
-    }
-
-    &:active {
-      opacity: 0.75;
     }
   }
 }
