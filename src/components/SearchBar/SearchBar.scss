@@ -46,18 +46,19 @@
       height: 100%;
       background-size: cover;
       background-color: white;
-      -webkit-mask: url('../../assets/icons/search.png') no-repeat center / contain;
+      -webkit-mask: url('../../assets/icons/search.png') no-repeat center /
+        contain;
       mask: url('../../assets/icons/search.png') no-repeat center / contain;
     }
 
     @media (hover: hover) {
       &:hover {
-        opacity: .85;
+        opacity: 0.85;
       }
     }
 
     &:active {
-      opacity: .75;
+      opacity: 0.75;
     }
   }
 }

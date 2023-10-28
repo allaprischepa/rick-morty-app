@@ -1,12 +1,11 @@
 @import '../../styles/abstract/variables';
 
 .not-found-card {
-
   .character-image {
     position: relative;
 
     img {
-      opacity: .75;
+      opacity: 0.75;
     }
   }
 
@@ -25,8 +24,8 @@
     padding: 5px 7px;
     text-transform: uppercase;
     text-align: center;
-    // border-radius: 8px;
-    -webkit-mask: url('../../assets/images/stamp-texture.png') repeat center / contain;
+    -webkit-mask: url('../../assets/images/stamp-texture.png') repeat center /
+      contain;
     mask: url('../../assets/images/stamp-texture.png') repeat center / contain;
     mix-blend-mode: multiply;
   }
