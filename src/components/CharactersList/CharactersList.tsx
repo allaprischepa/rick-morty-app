@@ -3,10 +3,11 @@ import DataLoader from '../../services/dataLoader/dataLoader';
 import { IAppProps, ICharacterData } from '../../types/types';
 import CharacterCard from '../CharacterCard/CharacterCard';
 import './CharactersList.scss';
+import NotFoundCard from '../NotFoundCard/NotFoundCard';
 
 class CharactersList extends Component<
   Pick<IAppProps, 'searchTerm'>,
-  { characterData: ICharacterData[] | null }
+  { characterData: ICharacterData[] | null; loader: boolean }
 > {
   loader = new DataLoader();
 
@@ -14,6 +15,7 @@ class CharactersList extends Component<
     super(props);
     this.state = {
       characterData: null,
+      loader: true,
     };
   }
 
@@ -23,6 +25,7 @@ class CharactersList extends Component<
 
   componentDidUpdate(prevProps: Pick<IAppProps, 'searchTerm'>) {
     if (this.props.searchTerm !== prevProps.searchTerm) {
+      this.setState({ loader: true });
       this.loadData(this.props.searchTerm);
     }
   }
@@ -30,25 +33,35 @@ class CharactersList extends Component<
   async loadData(searchTerm: string) {
     try {
       const data = await this.loader.getData(searchTerm);
-      this.setState({ characterData: data });
+      setTimeout(() => {
+        this.setState({ characterData: data, loader: false });
+      }, 250);
     } catch (error) {
       console.error(error);
     }
   }
 
   render() {
-    const { characterData } = this.state;
+    const { characterData, loader } = this.state;
 
     return (
-      <div className="characters-list">
-        {characterData ? (
-          characterData.map((character: ICharacterData) => (
-            <CharacterCard key={character.id} {...character}></CharacterCard>
-          ))
-        ) : (
-          <div>No characters found</div>
-        )}
-      </div>
+      <>
+        {loader ? <div className="loading"></div> : null}
+        <div className="characters-list">
+          {characterData !== null ? (
+            characterData.length ? (
+              characterData.map((character: ICharacterData) => (
+                <CharacterCard
+                  key={character.id}
+                  {...character}
+                ></CharacterCard>
+              ))
+            ) : (
+              <NotFoundCard></NotFoundCard>
+            )
+          ) : null}
+        </div>
+      </>
     );
   }
 }

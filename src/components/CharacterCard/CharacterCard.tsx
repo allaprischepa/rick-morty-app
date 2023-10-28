@@ -13,9 +13,22 @@ class CharacterCard extends Component<ICharacterData> {
         </div>
         <div className="character-name">{name}</div>
         <div className="character-description">
-          <div className="character-status">Status: {status}</div>
-          <div className="character-species">Species: {species}</div>
-          <div className="character-location">Location: {location.name}</div>
+          <table className="character-properties">
+            <tbody>
+              <tr>
+                <td>Status:</td>
+                <td>{status}</td>
+              </tr>
+              <tr>
+                <td>Species:</td>
+                <td>{species}</td>
+              </tr>
+              <tr>
+                <td>Location:</td>
+                <td>{location.name}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     );

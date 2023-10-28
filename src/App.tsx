@@ -13,9 +13,10 @@ class App extends Component {
   };
 
   updateSearchTerm = (value: string) => {
-    console.log(value);
-    this.setState({ searchTerm: value });
-    localStorage.setItem(SEARCH_TERM_NAME, value);
+    if (this.state.searchTerm !== value) {
+      this.setState({ searchTerm: value });
+      localStorage.setItem(SEARCH_TERM_NAME, value);
+    }
   };
 
   render() {

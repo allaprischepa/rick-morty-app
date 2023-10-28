@@ -25,7 +25,7 @@ class SearchBar extends Component<IAppProps> {
           placeholder="Type the name..."
           className="search-input"
         />
-        <input type="submit" value="Search" className="search-button" />
+        <button type="submit" title="Search" className="search-button" />
       </form>
     );
   }
