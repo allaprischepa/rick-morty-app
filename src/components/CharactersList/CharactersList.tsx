@@ -5,25 +5,24 @@ import CharacterCard from '../CharacterCard/CharacterCard';
 import './CharactersList.scss';
 import NotFoundCard from '../NotFoundCard/NotFoundCard';
 
-class CharactersList extends Component<
-  Pick<IAppProps, 'searchTerm'>,
-  { characterData: ICharacterData[] | null; loader: boolean }
-> {
-  loader = new DataLoader();
+type Props = Pick<IAppProps, 'searchTerm'>;
+interface State {
+  characterData: ICharacterData[] | null;
+  loader: boolean;
+}
 
-  constructor(props: Pick<IAppProps, 'searchTerm'>) {
-    super(props);
-    this.state = {
-      characterData: null,
-      loader: true,
-    };
-  }
+class CharactersList extends Component<Props, State> {
+  loader = new DataLoader();
+  state: State = {
+    characterData: null,
+    loader: true,
+  };
 
   componentDidMount() {
     this.loadData(this.props.searchTerm);
   }
 
-  componentDidUpdate(prevProps: Pick<IAppProps, 'searchTerm'>) {
+  componentDidUpdate(prevProps: Props) {
     if (this.props.searchTerm !== prevProps.searchTerm) {
       this.setState({ loader: true });
       this.loadData(this.props.searchTerm);

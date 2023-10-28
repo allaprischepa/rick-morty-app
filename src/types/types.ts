@@ -1,4 +1,10 @@
-export interface IAppProps {
+import { ReactNode } from 'react';
+
+export interface IProps {
+  children?: ReactNode;
+}
+
+export interface IAppProps extends IProps {
   searchTerm: string;
   updateSearchTerm: (value: string) => void;
 }

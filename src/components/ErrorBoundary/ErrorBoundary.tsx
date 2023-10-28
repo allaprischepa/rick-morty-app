@@ -1,26 +1,27 @@
-import { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo } from 'react';
 import './ErrorBoundary.scss';
-
-interface Props {
-  children?: ReactNode;
-}
+import { IProps } from '../../types/types';
 
 interface State {
   hasError: boolean;
 }
 
-class ErrorBoundary extends Component<Props, State> {
+class ErrorBoundary extends Component<IProps, State> {
   state: State = { hasError: false };
 
-  public static getDerivedStateFromError(): State {
+  static getDerivedStateFromError(): State {
     return { hasError: true };
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error:', error, errorInfo);
   }
 
-  public render() {
+  pageReload = () => {
+    window.location.reload();
+  };
+
+  render() {
     if (this.state.hasError) {
       return (
         <div className="error-boundary">
@@ -28,10 +29,7 @@ class ErrorBoundary extends Component<Props, State> {
             <div>Sorry... The error occurred.</div>
             <div>Please, try to reload page.</div>
           </div>
-          <button
-            className="reload-button"
-            onClick={() => window.location.reload()}
-          >
+          <button className="reload-button" onClick={this.pageReload}>
             Reload page
           </button>
         </div>

@@ -5,12 +5,17 @@ import SearchBar from './components/SearchBar/SearchBar';
 import Logo from './components/Logo/Logo';
 import ErrorButton from './components/ErrorButton/ErrorButton';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+import { IProps } from './types/types';
 
 const SEARCH_TERM_NAME = 'RMAppSearchTerm';
 const savedTerm = localStorage.getItem(SEARCH_TERM_NAME);
 
-class App extends Component {
-  state = {
+interface State {
+  searchTerm: string;
+}
+
+class App extends Component<IProps, State> {
+  state: State = {
     searchTerm: savedTerm ? savedTerm : '',
   };
 
