@@ -11,6 +11,7 @@ class SearchBar extends Component<IAppProps> {
       event.currentTarget.elements.namedItem(SEARCH_INPUT_NAME);
 
     if (searchInput instanceof HTMLInputElement) {
+      searchInput.value = searchInput.value.trim();
       this.props.updateSearchTerm(searchInput.value);
     }
   };

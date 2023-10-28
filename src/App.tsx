@@ -20,9 +20,11 @@ class App extends Component<IProps, State> {
   };
 
   updateSearchTerm = (value: string) => {
-    if (this.state.searchTerm !== value) {
-      this.setState({ searchTerm: value });
-      localStorage.setItem(SEARCH_TERM_NAME, value);
+    const newValue = value.trim();
+
+    if (this.state.searchTerm !== newValue) {
+      this.setState({ searchTerm: newValue });
+      localStorage.setItem(SEARCH_TERM_NAME, newValue);
     }
   };
 
