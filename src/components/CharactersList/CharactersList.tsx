@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import DataLoader from '../../services/dataLoader/dataLoader';
 import { IAppProps, ICharacterData } from '../../types/types';
 import CharacterCard from '../CharacterCard/CharacterCard';
@@ -6,63 +6,48 @@ import './CharactersList.scss';
 import NotFoundCard from '../NotFoundCard/NotFoundCard';
 
 type Props = Pick<IAppProps, 'searchTerm'>;
-interface State {
-  characterData: ICharacterData[] | null;
-  loader: boolean;
-}
+type CharacterData = ICharacterData[] | null;
 
-class CharactersList extends Component<Props, State> {
-  loader = new DataLoader();
-  state: State = {
-    characterData: null,
-    loader: true,
+function CharactersList({ searchTerm }: Props) {
+  const [characterData, setCharacterData] = useState<CharacterData>(null);
+  const [loader, setLoader] = useState(false);
+
+  useEffect(() => {
+    const dataLoader = new DataLoader();
+
+    const loadData = async (searchTerm: string) => {
+      try {
+        const data = await dataLoader.getData(searchTerm);
+
+        setTimeout(() => {
+          setCharacterData(data);
+          setLoader(false);
+        }, 250);
+      } catch (err) {
+        console.error(err);
+        setLoader(false);
+      }
+    };
+
+    setLoader(true);
+    loadData(searchTerm);
+  }, [searchTerm]);
+
+  const showData = (data: CharacterData): JSX.Element | JSX.Element[] => {
+    if (data === null) return <></>;
+    if (!data.length) return <NotFoundCard />;
+
+    return data.map((character: ICharacterData) => (
+      <CharacterCard key={character.id} {...character} />
+    ));
   };
 
-  componentDidMount() {
-    this.loadData(this.props.searchTerm);
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    if (this.props.searchTerm !== prevProps.searchTerm) {
-      this.setState({ loader: true });
-      this.loadData(this.props.searchTerm);
-    }
-  }
-
-  async loadData(searchTerm: string) {
-    try {
-      const data = await this.loader.getData(searchTerm);
-      setTimeout(() => {
-        this.setState({ characterData: data, loader: false });
-      }, 250);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  render() {
-    const { characterData, loader } = this.state;
-
-    return (
-      <>
-        {loader ? <div className="loading"></div> : null}
-        <div className="characters-list">
-          {characterData !== null ? (
-            characterData.length ? (
-              characterData.map((character: ICharacterData) => (
-                <CharacterCard
-                  key={character.id}
-                  {...character}
-                ></CharacterCard>
-              ))
-            ) : (
-              <NotFoundCard></NotFoundCard>
-            )
-          ) : null}
-        </div>
-      </>
-    );
-  }
+  return (
+    <>
+      {loader ? <div className="loading"></div> : null}
+      <div className="characters-list">{showData(characterData)}</div>
+    </>
+  );
 }
 
 export default CharactersList;
