@@ -1,5 +1,5 @@
-@import './styles/abstract/variables';
-@import './styles/abstract/mixins';
+@import './abstract/variables';
+@import './abstract/mixins';
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -27,7 +27,7 @@ body {
   display: flex;
   min-width: 320px;
   min-height: 100vh;
-  background-image: url('./assets/images/rick-and-morty-wallpaper.jpg');
+  background-image: url('../assets/images/rick-and-morty-wallpaper.jpg');
   background-position-x: center;
 }
 

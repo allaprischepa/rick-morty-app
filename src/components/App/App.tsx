@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import './App.scss';
-import CharactersList from './components/CharactersList/CharactersList';
-import SearchBar from './components/SearchBar/SearchBar';
-import Logo from './components/Logo/Logo';
-import ErrorButton from './components/ErrorButton/ErrorButton';
-import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+import CharactersList from '../CharactersList/CharactersList';
+import SearchBar from '../SearchBar/SearchBar';
+import Logo from '../Logo/Logo';
+import ErrorButton from '../ErrorButton/ErrorButton';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 
 function App() {
   const SEARCH_TERM_NAME = 'RMAppSearchTerm';
