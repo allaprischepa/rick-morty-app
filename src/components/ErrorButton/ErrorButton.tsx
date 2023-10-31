@@ -1,28 +1,16 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import './ErrorButton.scss';
-import { IProps } from '../../types/types';
 
-interface State {
-  error: boolean;
-}
+function ErrorButton() {
+  const [error, setError] = useState(false);
 
-class ErrorButton extends Component<IProps, State> {
-  state: State = { error: false };
+  if (error) throw new Error('An error occurred on button click');
 
-  handleClick = () => {
-    this.setState({ error: !this.state.error });
-  };
-
-  render() {
-    if (this.state.error) throw new Error('An error occurred on button click');
-
-    const buttonText = 'Click me to show the error';
-    return (
-      <button className="error-button" onClick={this.handleClick}>
-        {buttonText}
-      </button>
-    );
-  }
+  return (
+    <button className="error-button" onClick={() => setError(true)}>
+      Click me to show the error
+    </button>
+  );
 }
 
 export default ErrorButton;
