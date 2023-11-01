@@ -36,6 +36,7 @@ h1 {
   line-height: 1.1;
 }
 
-button {
+button,
+.button {
   @include button($gray-color);
 }

@@ -1,29 +1,18 @@
-import { useState } from 'react';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import MainPage from '../pages/MainPage/MainPage';
 import './App.scss';
-import CharactersList from '../CharactersList/CharactersList';
-import SearchBar from '../SearchBar/SearchBar';
-import Logo from '../Logo/Logo';
-import ErrorButton from '../ErrorButton/ErrorButton';
-import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
+import ErrorPage from '../pages/ErrorPage/ErrorPage';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <MainPage />,
+    errorElement: <ErrorPage />,
+  },
+]);
 
 function App() {
-  const SEARCH_TERM_NAME = 'RMAppSearchTerm';
-  const savedTerm = localStorage.getItem(SEARCH_TERM_NAME);
-  const [searchTerm, setSearchTerm] = useState(savedTerm ?? '');
-
-  const updateSearchTerm = (value: string) => {
-    setSearchTerm(value);
-    localStorage.setItem(SEARCH_TERM_NAME, value);
-  };
-
-  return (
-    <ErrorBoundary>
-      <ErrorButton />
-      <Logo />
-      <SearchBar searchTerm={searchTerm} updateSearchTerm={updateSearchTerm} />
-      <CharactersList searchTerm={searchTerm} />
-    </ErrorBoundary>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
