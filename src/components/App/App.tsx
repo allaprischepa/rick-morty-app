@@ -9,7 +9,7 @@ import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 function App() {
   const SEARCH_TERM_NAME = 'RMAppSearchTerm';
   const savedTerm = localStorage.getItem(SEARCH_TERM_NAME);
-  const [searchTerm, setSearchTerm] = useState(savedTerm ? savedTerm : '');
+  const [searchTerm, setSearchTerm] = useState(savedTerm ?? '');
 
   const updateSearchTerm = (value: string) => {
     setSearchTerm(value);

@@ -1,9 +1,10 @@
-import { FormEvent, useRef } from 'react';
+import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import { IAppProps } from '../../types/types';
 import './SearchBar.scss';
 
 function SearchBar({ searchTerm, updateSearchTerm }: IAppProps) {
   const inputElement = useRef<HTMLInputElement>(null);
+  const [inputValue, setInputValue] = useState(searchTerm);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -11,9 +12,14 @@ function SearchBar({ searchTerm, updateSearchTerm }: IAppProps) {
     const current = inputElement.current;
 
     if (current) {
-      current.value = current.value.trim();
-      updateSearchTerm(current.value);
+      const value = current.value.trim();
+      setInputValue(value);
+      updateSearchTerm(value);
     }
+  };
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
   };
 
   return (
@@ -21,9 +27,10 @@ function SearchBar({ searchTerm, updateSearchTerm }: IAppProps) {
       <input
         type="text"
         ref={inputElement}
-        defaultValue={searchTerm}
+        value={inputValue}
         placeholder="Type the name..."
         className="search-input"
+        onChange={handleChange}
       />
       <button type="submit" title="Search" className="search-button" />
     </form>
