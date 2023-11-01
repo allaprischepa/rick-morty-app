@@ -56,8 +56,16 @@ function CharactersList({ searchTerm, page = 1 }: Props) {
     startPage = startPage > 1 ? startPage : 1;
     let endPage = currentPage + 5;
     endPage = endPage < pagesCount ? endPage : pagesCount;
-    const firstPage = <Link to={`.?page=1`}>{'<<'}</Link>;
-    const lastPage = <Link to={`.?page=${pagesCount}`}>{'>>'}</Link>;
+    const firstPage = (
+      <Link to={`.?page=1`} key="first">
+        {'<<'}
+      </Link>
+    );
+    const lastPage = (
+      <Link to={`.?page=${pagesCount}`} key="last">
+        {'>>'}
+      </Link>
+    );
 
     pagerContent.push(firstPage);
     for (let page = startPage; page <= endPage; page++) {
