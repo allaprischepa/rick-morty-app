@@ -1,11 +1,15 @@
-import { ICharacterData } from '../../types/types';
+import { ICharacterData, IResponse } from '../../types/types';
 import { API_URL } from './settings';
 
 class DataLoader {
-  getData(searchTerm = ''): Promise<ICharacterData[]> {
-    return searchTerm
-      ? this.getDataFromFirstPage(searchTerm)
-      : this.getAllData();
+  async getData(searchTerm = '', page = 1): Promise<IResponse> {
+    return fetch(`${API_URL}/?page=${page}&name=${searchTerm}`)
+      .then((res) => (res.status === 200 ? res.json() : null))
+      .then((data) => ({
+        results: data?.results ?? [],
+        count: data?.info?.count ?? 0,
+        pages: data?.info?.pages ?? 0,
+      }));
   }
 
   private getDataFromFirstPage(searchTerm: string): Promise<ICharacterData[]> {

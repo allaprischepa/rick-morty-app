@@ -7,6 +7,7 @@ export interface IProps {
 export interface IAppProps extends IProps {
   searchTerm: string;
   updateSearchTerm: (value: string) => void;
+  page?: number;
 }
 
 export interface ICharacterData {
@@ -28,4 +29,10 @@ export interface ICharacterData {
   episode: string[];
   url: string;
   created: string;
+}
+
+export interface IResponse {
+  results: ICharacterData[];
+  count: number;
+  pages: number;
 }
