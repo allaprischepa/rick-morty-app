@@ -1,0 +1,46 @@
+@import '../../styles/abstract/variables';
+
+.character-details-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: $gray-transparent;
+  }
+
+  .character-details {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 100vw;
+    max-width: 500px;
+    background-color: white;
+    padding: 30px 40px;
+    box-sizing: border-box;
+
+    .character-image {
+      width: 80%;
+      margin: auto;
+      img {
+        width: 100%;
+        margin: auto;
+      }
+    }
+
+    .character-properties {
+      td:first-child {
+        opacity: 0.6;
+        vertical-align: top;
+      }
+    }
+  }
+}

@@ -5,12 +5,14 @@ import CharacterCard from '../CharacterCard/CharacterCard';
 import './CharactersList.scss';
 import NotFoundCard from '../NotFoundCard/NotFoundCard';
 import Pager from '../Pager/Pager';
+import { NavLink } from 'react-router-dom';
+import Loader from '../Loader/Loader';
 
 type Props = Pick<IAppProps, 'searchTerm' | 'page'>;
 type CharactersData = ICharacterData[] | null;
 
 function CharactersList({ searchTerm, page = 1 }: Props) {
-  const [characterData, setCharacterData] = useState<CharactersData>(null);
+  const [charactersData, setCharactersData] = useState<CharactersData>(null);
   const [pagesCount, setPagesCount] = useState(0);
   const [loader, setLoader] = useState(false);
 
@@ -22,7 +24,7 @@ function CharactersList({ searchTerm, page = 1 }: Props) {
         const data = await dataLoader.getData(searchTerm, page);
 
         setTimeout(() => {
-          setCharacterData(data.results);
+          setCharactersData(data.results);
           setPagesCount(data.pages);
           setLoader(false);
         }, 250);
@@ -41,15 +43,21 @@ function CharactersList({ searchTerm, page = 1 }: Props) {
     if (!data.length) return <NotFoundCard />;
 
     return data.map((character: ICharacterData) => (
-      <CharacterCard key={character.id} {...character} />
+      <NavLink
+        key={character.id}
+        to={`./details/${character.id}`}
+        className="card-link"
+      >
+        <CharacterCard {...character} />
+      </NavLink>
     ));
   };
 
   return (
     <>
-      {loader ? <div className="loading"></div> : null}
+      {loader ? <Loader /> : null}
       <Pager currentPage={page} pagesCount={pagesCount} />
-      <div className="characters-list">{showData(characterData)}</div>
+      <div className="characters-list">{showData(charactersData)}</div>
     </>
   );
 }

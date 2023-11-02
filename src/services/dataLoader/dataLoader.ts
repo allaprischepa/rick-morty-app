@@ -12,6 +12,12 @@ class DataLoader {
       }));
   }
 
+  async getCharacterData(id = ''): Promise<ICharacterData> {
+    return fetch(`${API_URL}/${id}`).then((res) =>
+      res.status === 200 ? res.json() : null
+    );
+  }
+
   private getDataFromFirstPage(searchTerm: string): Promise<ICharacterData[]> {
     return fetch(`${API_URL}/?page=1&name=${searchTerm}`)
       .then((res) => (res.status === 200 ? res.json() : null))
