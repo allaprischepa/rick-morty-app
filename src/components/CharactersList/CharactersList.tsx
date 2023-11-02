@@ -4,7 +4,7 @@ import { IAppProps, ICharacterData } from '../../types/types';
 import CharacterCard from '../CharacterCard/CharacterCard';
 import './CharactersList.scss';
 import NotFoundCard from '../NotFoundCard/NotFoundCard';
-import { Link } from 'react-router-dom';
+import Pager from '../Pager/Pager';
 
 type Props = Pick<IAppProps, 'searchTerm' | 'page'>;
 type CharactersData = ICharacterData[] | null;
@@ -45,46 +45,11 @@ function CharactersList({ searchTerm, page = 1 }: Props) {
     ));
   };
 
-  const pagerElement = (
-    currentPage: number,
-    pagesCount: number
-  ): JSX.Element | JSX.Element[] => {
-    if (pagesCount <= 0) return <></>;
-
-    const pagerContent: JSX.Element[] = [];
-    let startPage = currentPage - 5;
-    startPage = startPage > 1 ? startPage : 1;
-    let endPage = currentPage + 5;
-    endPage = endPage < pagesCount ? endPage : pagesCount;
-    const firstPage = (
-      <Link to={`.?page=1`} key="first">
-        {'<<'}
-      </Link>
-    );
-    const lastPage = (
-      <Link to={`.?page=${pagesCount}`} key="last">
-        {'>>'}
-      </Link>
-    );
-
-    pagerContent.push(firstPage);
-    for (let page = startPage; page <= endPage; page++) {
-      pagerContent.push(
-        <Link to={`.?page=${page}`} key={`${page}`}>
-          {page}
-        </Link>
-      );
-    }
-    pagerContent.push(lastPage);
-
-    return pagerContent ? <div className="pager">{pagerContent}</div> : <></>;
-  };
-
   return (
     <>
       {loader ? <div className="loading"></div> : null}
+      <Pager currentPage={page} pagesCount={pagesCount} />
       <div className="characters-list">{showData(characterData)}</div>
-      {pagerElement(page, pagesCount)}
     </>
   );
 }

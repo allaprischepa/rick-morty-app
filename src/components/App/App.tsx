@@ -1,14 +1,27 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import MainPage, { loader as mainPageLoader } from '../pages/MainPage/MainPage';
+import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
+import MainPage from '../pages/MainPage/MainPage';
 import './App.scss';
 import ErrorPage from '../pages/ErrorPage/ErrorPage';
+import CharacterDetails from '../CharactersDetails/CharactersDetail';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <MainPage />,
+    element: <Outlet />,
     errorElement: <ErrorPage />,
-    loader: mainPageLoader,
+    children: [
+      { index: true, element: <MainPage /> },
+      {
+        path: 'page/:pageID',
+        element: <MainPage />,
+        children: [
+          {
+            path: 'details/:characterID',
+            element: <CharacterDetails />,
+          },
+        ],
+      },
+    ],
   },
 ]);
 
