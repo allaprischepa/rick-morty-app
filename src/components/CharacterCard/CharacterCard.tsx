@@ -1,4 +1,4 @@
-import { ICharacterData } from '../../types/types';
+import { CharacterData } from '../../types/types';
 import './CharacterCard.scss';
 
 function CharacterCard({
@@ -7,7 +7,7 @@ function CharacterCard({
   species,
   location,
   image,
-}: ICharacterData) {
+}: CharacterData) {
   return (
     <div className="character-card">
       <div className="character-image">

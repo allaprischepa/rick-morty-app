@@ -1,4 +1,4 @@
-import { ICharacterData, IResponse } from '../../types/types';
+import { CharacterData, Response } from '../../types/types';
 import { API_ITEMS_PER_PAGE, API_URL } from './settings';
 
 class DataLoader {
@@ -6,7 +6,7 @@ class DataLoader {
     searchTerm = '',
     page = 1,
     itemsPerPage = API_ITEMS_PER_PAGE
-  ): Promise<IResponse> {
+  ): Promise<Response> {
     if (itemsPerPage === API_ITEMS_PER_PAGE) {
       return this.getSinglePage(searchTerm, page);
     }
@@ -14,7 +14,7 @@ class DataLoader {
     return this.getSeveralPages(searchTerm, page, itemsPerPage);
   }
 
-  private async getSinglePage(searchTerm = '', page = 1): Promise<IResponse> {
+  private async getSinglePage(searchTerm = '', page = 1): Promise<Response> {
     return fetch(`${API_URL}/?page=${page}&name=${searchTerm}`)
       .then((res) => (res.status === 200 ? res.json() : null))
       .then((data) => ({
@@ -23,7 +23,7 @@ class DataLoader {
       }));
   }
 
-  async getCharacterData(id = ''): Promise<ICharacterData> {
+  async getCharacterData(id = ''): Promise<CharacterData> {
     return fetch(`${API_URL}/${id}`).then((res) =>
       res.status === 200 ? res.json() : null
     );
@@ -33,8 +33,8 @@ class DataLoader {
     searchTerm = '',
     page = 1,
     itemsPerPage = API_ITEMS_PER_PAGE
-  ): Promise<IResponse> {
-    let results: ICharacterData[] = [];
+  ): Promise<Response> {
+    let results: CharacterData[] = [];
     let pages = 0;
     let totalPages = 0;
     const countOfRequests = itemsPerPage / API_ITEMS_PER_PAGE;

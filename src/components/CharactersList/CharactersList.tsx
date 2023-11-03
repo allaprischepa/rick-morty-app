@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import DataLoader from '../../services/dataLoader/dataLoader';
-import { ICharacterData } from '../../types/types';
+import { CharacterData } from '../../types/types';
 import CharacterCard from '../CharacterCard/CharacterCard';
 import './CharactersList.scss';
 import NotFoundCard from '../NotFoundCard/NotFoundCard';
@@ -15,7 +15,7 @@ interface Props {
   itemsPerPage: number;
   updateItemsPerPage: (value: number) => void;
 }
-type CharactersData = ICharacterData[] | null;
+type Data = CharacterData[] | null;
 
 function CharactersList({
   searchTerm,
@@ -23,7 +23,7 @@ function CharactersList({
   itemsPerPage,
   updateItemsPerPage,
 }: Props) {
-  const [charactersData, setCharactersData] = useState<CharactersData>(null);
+  const [charactersData, setCharactersData] = useState<Data>(null);
   const [pagesCount, setPagesCount] = useState(0);
   const [loader, setLoader] = useState(false);
 
@@ -49,11 +49,11 @@ function CharactersList({
     loadData(searchTerm, page);
   }, [searchTerm, page, itemsPerPage]);
 
-  const showData = (data: CharactersData): JSX.Element | JSX.Element[] => {
+  const showData = (data: Data): JSX.Element | JSX.Element[] => {
     if (data === null) return <></>;
     if (!data.length) return <NotFoundCard />;
 
-    return data.map((character: ICharacterData) => (
+    return data.map((character: CharacterData) => (
       <NavLink
         key={character.id}
         to={`./details/${character.id}`}

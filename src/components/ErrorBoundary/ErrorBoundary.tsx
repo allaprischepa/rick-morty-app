@@ -1,12 +1,15 @@
-import { Component, ErrorInfo } from 'react';
-import { IProps } from '../../types/types';
+import { Component, ErrorInfo, ReactNode } from 'react';
 import ErrorPage from '../pages/ErrorPage/ErrorPage';
+
+export interface Props {
+  children?: ReactNode;
+}
 
 interface State {
   hasError: boolean;
 }
 
-class ErrorBoundary extends Component<IProps, State> {
+class ErrorBoundary extends Component<Props, State> {
   state: State = { hasError: false };
 
   static getDerivedStateFromError(): State {

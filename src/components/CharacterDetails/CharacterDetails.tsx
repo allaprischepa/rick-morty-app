@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import DataLoader from '../../services/dataLoader/dataLoader';
-import { ICharacterData } from '../../types/types';
+import { CharacterData } from '../../types/types';
 import Loader from '../Loader/Loader';
 import notFoundImage from '../../assets/images/empty-avatar.jpeg';
 import './CharacterDetails.scss';
 
-type CharacterData = ICharacterData | null;
+type Data = CharacterData | null;
 
 function CharacterDetails() {
   const { characterID } = useParams();
-  const [characterData, setCharacterData] = useState<CharacterData>(null);
+  const [characterData, setCharacterData] = useState<Data>(null);
   const [loader, setLoader] = useState(false);
   const navigate = useNavigate();
   const NOT_SPECIFIED = 'not specified';

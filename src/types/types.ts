@@ -1,10 +1,4 @@
-import { ReactNode } from 'react';
-
-export interface IProps {
-  children?: ReactNode;
-}
-
-export interface ICharacterData {
+export interface CharacterData {
   id: number;
   name: string;
   status: string;
@@ -25,7 +19,7 @@ export interface ICharacterData {
   created: string;
 }
 
-export interface IResponse {
-  results: ICharacterData[];
+export interface Response {
+  results: CharacterData[];
   pages: number;
 }
