@@ -38,5 +38,5 @@ h1 {
 
 button,
 .button {
-  @include button($gray-color);
+  @include button($main-color-dark);
 }

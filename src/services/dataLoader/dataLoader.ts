@@ -1,13 +1,24 @@
 import { ICharacterData, IResponse } from '../../types/types';
-import { API_URL } from './settings';
+import { API_ITEMS_PER_PAGE, API_URL } from './settings';
 
 class DataLoader {
-  async getData(searchTerm = '', page = 1): Promise<IResponse> {
+  async getData(
+    searchTerm = '',
+    page = 1,
+    itemsPerPage = API_ITEMS_PER_PAGE
+  ): Promise<IResponse> {
+    if (itemsPerPage === API_ITEMS_PER_PAGE) {
+      return this.getSinglePage(searchTerm, page);
+    }
+
+    return this.getSeveralPages(searchTerm, page, itemsPerPage);
+  }
+
+  private async getSinglePage(searchTerm = '', page = 1): Promise<IResponse> {
     return fetch(`${API_URL}/?page=${page}&name=${searchTerm}`)
       .then((res) => (res.status === 200 ? res.json() : null))
       .then((data) => ({
         results: data?.results ?? [],
-        count: data?.info?.count ?? 0,
         pages: data?.info?.pages ?? 0,
       }));
   }
@@ -18,30 +29,32 @@ class DataLoader {
     );
   }
 
-  private getDataFromFirstPage(searchTerm: string): Promise<ICharacterData[]> {
-    return fetch(`${API_URL}/?page=1&name=${searchTerm}`)
-      .then((res) => (res.status === 200 ? res.json() : null))
-      .then((data) => (data?.results ? data.results : []));
-  }
+  private async getSeveralPages(
+    searchTerm = '',
+    page = 1,
+    itemsPerPage = API_ITEMS_PER_PAGE
+  ): Promise<IResponse> {
+    let results: ICharacterData[] = [];
+    let pages = 0;
+    let totalPages = 0;
+    const countOfRequests = itemsPerPage / API_ITEMS_PER_PAGE;
+    const startPage = countOfRequests * (page - 1) + 1;
+    const endPage = startPage + countOfRequests - 1;
 
-  private async getAllData(): Promise<ICharacterData[]> {
-    let allCharacters: ICharacterData[] = [];
-    let page = 1;
-    let totalPages = 1;
+    for (let p = startPage; p <= endPage; p++) {
+      if (totalPages && p > totalPages) continue;
 
-    while (page <= totalPages) {
-      const response = await fetch(`${API_URL}?page=${page}`);
+      const response = await fetch(`${API_URL}?page=${p}&name=${searchTerm}`);
       const data = await response.json();
 
       if (data && data.results) {
-        allCharacters = [...allCharacters, ...data.results];
+        results = [...results, ...data.results];
         totalPages = data.info.pages;
+        pages = Math.ceil(data.info.pages / countOfRequests);
       }
-
-      page++;
     }
 
-    return allCharacters;
+    return { results, pages };
   }
 }
 

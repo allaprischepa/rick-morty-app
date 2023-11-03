@@ -7,7 +7,7 @@ interface IPagerProps {
   pagerGap?: number;
 }
 
-function Pager({ currentPage, pagesCount, pagerGap = 5 }: IPagerProps) {
+function Pager({ currentPage, pagesCount, pagerGap = 0 }: IPagerProps) {
   if (pagesCount <= 0) return <></>;
 
   const getStartPage = () => {
@@ -24,20 +24,17 @@ function Pager({ currentPage, pagesCount, pagerGap = 5 }: IPagerProps) {
     return endPage;
   };
 
-  const getPrevPageLink = (): JSX.Element => {
-    if (currentPage - 1 <= 0) return <></>;
+  const getPrevPageLink = (): JSX.Element | null => {
+    const pageNum = currentPage - 1 <= 0 ? currentPage : currentPage - 1;
 
-    return (
-      <NavLink to={`../page/${currentPage - 1}`} key="prev" className="prev" />
-    );
+    return <NavLink to={`../page/${pageNum}`} key="prev" className="prev" />;
   };
 
-  const getNextPageLink = (): JSX.Element => {
-    if (currentPage + 1 > pagesCount) return <></>;
+  const getNextPageLink = (): JSX.Element | null => {
+    const pageNum =
+      currentPage + 1 > pagesCount ? currentPage : currentPage + 1;
 
-    return (
-      <NavLink to={`../page/${currentPage + 1}`} key="next" className="next" />
-    );
+    return <NavLink to={`../page/${pageNum}`} key="next" className="next" />;
   };
 
   const pagerContent: JSX.Element[] = [];
@@ -52,17 +49,17 @@ function Pager({ currentPage, pagesCount, pagerGap = 5 }: IPagerProps) {
   const lastPage = <NavLink to={lstPagePath} key="last" className="last" />;
 
   pagerContent.push(firstPage);
-  pagerContent.push(prevPage);
+  if (prevPage) pagerContent.push(prevPage);
 
   for (let page = startPage; page <= endPage; page++) {
     pagerContent.push(
-      <NavLink to={`../page/${page}`} key={`${page}`}>
+      <NavLink to={`../page/${page}`} key={`page-${page}`}>
         {page}
       </NavLink>
     );
   }
 
-  pagerContent.push(nextPage);
+  if (nextPage) pagerContent.push(nextPage);
   pagerContent.push(lastPage);
 
   return pagerContent ? <div className="pager">{pagerContent}</div> : <></>;

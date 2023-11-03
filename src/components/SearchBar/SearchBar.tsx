@@ -1,8 +1,12 @@
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
-import { IAppProps } from '../../types/types';
 import './SearchBar.scss';
 
-function SearchBar({ searchTerm, updateSearchTerm }: IAppProps) {
+interface Props {
+  searchTerm: string;
+  updateSearchTerm: (value: string) => void;
+}
+
+function SearchBar({ searchTerm, updateSearchTerm }: Props) {
   const inputElement = useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = useState(searchTerm);
 

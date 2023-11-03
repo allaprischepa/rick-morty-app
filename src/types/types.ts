@@ -4,12 +4,6 @@ export interface IProps {
   children?: ReactNode;
 }
 
-export interface IAppProps extends IProps {
-  searchTerm: string;
-  updateSearchTerm: (value: string) => void;
-  page?: number;
-}
-
 export interface ICharacterData {
   id: number;
   name: string;
@@ -33,6 +27,5 @@ export interface ICharacterData {
 
 export interface IResponse {
   results: ICharacterData[];
-  count: number;
   pages: number;
 }
