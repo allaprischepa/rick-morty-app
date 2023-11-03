@@ -1,5 +1,5 @@
 import { CharacterData, Response } from '../../types/types';
-import { API_ITEMS_PER_PAGE, API_URL } from './settings';
+import { API_ITEMS_PER_PAGE, API_URL, httpStatus } from './settings';
 
 class DataLoader {
   async getData(
@@ -15,18 +15,16 @@ class DataLoader {
   }
 
   private async getSinglePage(searchTerm = '', page = 1): Promise<Response> {
-    return fetch(`${API_URL}/?page=${page}&name=${searchTerm}`)
-      .then((res) => (res.status === 200 ? res.json() : null))
-      .then((data) => ({
+    return this.fetchData(`${API_URL}/?page=${page}&name=${searchTerm}`).then(
+      (data) => ({
         results: data?.results ?? [],
         pages: data?.info?.pages ?? 0,
-      }));
+      })
+    );
   }
 
   async getCharacterData(id = ''): Promise<CharacterData> {
-    return fetch(`${API_URL}/${id}`).then((res) =>
-      res.status === 200 ? res.json() : null
-    );
+    return this.fetchData(`${API_URL}/${id}`);
   }
 
   private async getSeveralPages(
@@ -42,12 +40,14 @@ class DataLoader {
     const endPage = startPage + countOfRequests - 1;
 
     for (let p = startPage; p <= endPage; p++) {
-      if (totalPages && p > totalPages) continue;
+      if (totalPages && p > totalPages) break;
 
-      const response = await fetch(`${API_URL}?page=${p}&name=${searchTerm}`);
-      const data = await response.json();
+      const url = `${API_URL}?page=${p}&name=${searchTerm}`;
+      const data = await this.fetchData(url);
 
-      if (data && data.results) {
+      if (!data) break;
+
+      if (data.results) {
         results = [...results, ...data.results];
         totalPages = data.info.pages;
         pages = Math.ceil(data.info.pages / countOfRequests);
@@ -55,6 +55,21 @@ class DataLoader {
     }
 
     return { results, pages };
+  }
+
+  private async fetchData(url: string) {
+    return fetch(url)
+      .then((res) => {
+        if (res.status === httpStatus.OK) return res.json();
+        if (res.status === httpStatus.NOT_FOUND) return;
+
+        throw new Error(`HTTP Error occured. Status: ${res.status}`);
+      })
+      .catch((error) => {
+        console.error('Some error occured due to fetch operation:', error);
+
+        throw error;
+      });
   }
 }
 
