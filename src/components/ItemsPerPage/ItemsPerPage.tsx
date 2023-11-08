@@ -1,18 +1,14 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useContext } from 'react';
 import { API_ITEMS_PER_PAGE } from '../../services/dataLoader/settings';
 import './ItemsPerPage.scss';
+import { MainPageContext } from '../pages/MainPage/MainPage';
 
 interface Props {
   optionsCount?: number;
-  defaultValue: number;
-  updateItemsPerPage: (val: number) => void;
 }
 
-function ItemsPerPage({
-  optionsCount = 3,
-  defaultValue,
-  updateItemsPerPage,
-}: Props) {
+function ItemsPerPage({ optionsCount = 3 }: Props) {
+  const { itemsPerPage, updateItemsPerPage } = useContext(MainPageContext);
   const options: JSX.Element[] = [];
 
   for (let i = 1; i <= optionsCount; i++) {
@@ -24,16 +20,14 @@ function ItemsPerPage({
     );
   }
 
+  const handleChangeEvent = (event: ChangeEvent<HTMLSelectElement>) =>
+    updateItemsPerPage(+event.target.value);
+
   return (
     <div className="items-per-page">
       <div className="label">Items per page</div>
       <div className="select">
-        <select
-          value={defaultValue}
-          onChange={(event: ChangeEvent<HTMLSelectElement>) =>
-            updateItemsPerPage(+event.target.value)
-          }
-        >
+        <select value={itemsPerPage} onChange={handleChangeEvent}>
           {options}
         </select>
       </div>

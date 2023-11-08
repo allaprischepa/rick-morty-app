@@ -1,12 +1,9 @@
-import { ChangeEvent, FormEvent, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, useContext, useRef, useState } from 'react';
 import './SearchBar.scss';
+import { MainPageContext } from '../pages/MainPage/MainPage';
 
-interface Props {
-  searchTerm: string;
-  updateSearchTerm: (value: string) => void;
-}
-
-function SearchBar({ searchTerm, updateSearchTerm }: Props) {
+function SearchBar() {
+  const { searchTerm, updateSearchTerm } = useContext(MainPageContext);
   const inputElement = useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = useState(searchTerm);
 

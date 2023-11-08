@@ -1,13 +1,14 @@
 import { NavLink } from 'react-router-dom';
 import './Pager.scss';
+import { useContext } from 'react';
+import { MainPageContext } from '../pages/MainPage/MainPage';
 
-interface IPagerProps {
-  currentPage: number;
-  pagesCount: number;
+interface Props {
   pagerGap?: number;
 }
 
-function Pager({ currentPage, pagesCount, pagerGap = 0 }: IPagerProps) {
+function Pager({ pagerGap = 0 }: Props) {
+  const { page: currentPage, pagesCount } = useContext(MainPageContext);
   if (pagesCount <= 0) return <></>;
 
   const getStartPage = () => {
