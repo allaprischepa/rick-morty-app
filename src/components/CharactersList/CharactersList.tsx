@@ -4,12 +4,11 @@ import CharacterCard from '../CharacterCard/CharacterCard';
 import './CharactersList.scss';
 import NotFoundCard from '../NotFoundCard/NotFoundCard';
 import Pager from '../Pager/Pager';
-import { NavLink } from 'react-router-dom';
 import ItemsPerPage from '../ItemsPerPage/ItemsPerPage';
 import { MainPageContext } from '../pages/MainPage/MainPage';
 
 function CharactersList() {
-  const { charactersData } = useContext(MainPageContext);
+  const { charactersData, goTo } = useContext(MainPageContext);
 
   const showData = (
     data: CharacterData[] | null
@@ -18,13 +17,13 @@ function CharactersList() {
     if (!data.length) return <NotFoundCard />;
 
     return data.map((character: CharacterData) => (
-      <NavLink
+      <div
         key={character.id}
-        to={`./details/${character.id}`}
+        onClick={() => goTo(`./details/${character.id}`)}
         className="card-link"
       >
         <CharacterCard {...character} />
-      </NavLink>
+      </div>
     ));
   };
 

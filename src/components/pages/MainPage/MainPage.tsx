@@ -18,10 +18,11 @@ interface Context {
   updateItemsPerPage: (val: number) => void;
   charactersData: CharacterData[] | null;
   pagesCount: number;
+  goTo: (val: string) => void;
   goToPage: (val: number) => void;
 }
 
-const defaultContext: Context = {
+export const defaultContext: Context = {
   searchTerm: '',
   page: 1,
   itemsPerPage: API_ITEMS_PER_PAGE,
@@ -29,6 +30,7 @@ const defaultContext: Context = {
   updateItemsPerPage: () => {},
   charactersData: null,
   pagesCount: 0,
+  goTo: () => {},
   goToPage: () => {},
 };
 
@@ -84,8 +86,12 @@ function MainPage() {
     navigate('/page/1', { replace: true });
   };
 
+  const goTo = (link: string) => {
+    navigate(link);
+  };
+
   const goToPage = (pageNum: number) => {
-    navigate(`/page/${pageNum}`);
+    goTo(`/page/${pageNum}`);
   };
 
   const context = {
@@ -96,6 +102,7 @@ function MainPage() {
     updateItemsPerPage,
     charactersData,
     pagesCount,
+    goTo,
     goToPage,
   };
 
