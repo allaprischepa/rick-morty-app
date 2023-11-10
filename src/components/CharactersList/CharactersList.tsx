@@ -7,6 +7,8 @@ import Pager from '../Pager/Pager';
 import ItemsPerPage from '../ItemsPerPage/ItemsPerPage';
 import { MainPageContext } from '../pages/MainPage/MainPage';
 
+export const TEST_ID = 'characters-list';
+
 function CharactersList() {
   const { charactersData, goTo } = useContext(MainPageContext);
 
@@ -33,7 +35,9 @@ function CharactersList() {
         <Pager />
         <ItemsPerPage />
       </div>
-      <div className="characters-list">{showData(charactersData)}</div>
+      <div className="characters-list" data-testid={TEST_ID}>
+        {showData(charactersData)}
+      </div>
     </>
   );
 }
