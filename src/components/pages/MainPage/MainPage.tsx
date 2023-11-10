@@ -18,6 +18,7 @@ interface Context {
   updateItemsPerPage: (val: number) => void;
   charactersData: CharacterData[] | null;
   pagesCount: number;
+  goToPage: (val: number) => void;
 }
 
 const defaultContext: Context = {
@@ -28,6 +29,7 @@ const defaultContext: Context = {
   updateItemsPerPage: () => {},
   charactersData: null,
   pagesCount: 0,
+  goToPage: () => {},
 };
 
 export const MainPageContext = createContext<Context>(defaultContext);
@@ -82,6 +84,10 @@ function MainPage() {
     navigate('/page/1', { replace: true });
   };
 
+  const goToPage = (pageNum: number) => {
+    navigate(`/page/${pageNum}`);
+  };
+
   const context = {
     searchTerm,
     page: +(pageID || 1),
@@ -90,6 +96,7 @@ function MainPage() {
     updateItemsPerPage,
     charactersData,
     pagesCount,
+    goToPage,
   };
 
   return (
