@@ -35,9 +35,9 @@ export const defaultContext: Context = {
 };
 
 export const MainPageContext = createContext<Context>(defaultContext);
+export const SEARCH_TERM_NAME = 'RMAppSearchTerm';
 
 function MainPage() {
-  const SEARCH_TERM_NAME = 'RMAppSearchTerm';
   const savedTerm = localStorage.getItem(SEARCH_TERM_NAME);
   const [searchTerm, setSearchTerm] = useState(savedTerm ?? '');
   const [itemsPerPage, setItemsPerPage] = useState(API_ITEMS_PER_PAGE);

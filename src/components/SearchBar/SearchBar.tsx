@@ -2,6 +2,8 @@ import { ChangeEvent, FormEvent, useContext, useRef, useState } from 'react';
 import './SearchBar.scss';
 import { MainPageContext } from '../pages/MainPage/MainPage';
 
+export const TEST_ID = 'search-bar';
+
 function SearchBar() {
   const { searchTerm, updateSearchTerm } = useContext(MainPageContext);
   const inputElement = useRef<HTMLInputElement>(null);
@@ -24,7 +26,7 @@ function SearchBar() {
   };
 
   return (
-    <form className="search-bar" onSubmit={handleSubmit}>
+    <form className="search-bar" onSubmit={handleSubmit} data-testid={TEST_ID}>
       <input
         type="text"
         ref={inputElement}
