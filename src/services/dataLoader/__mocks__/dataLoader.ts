@@ -1,49 +1,27 @@
 import { CharacterData } from '../../../types/types';
 
-const characterDataMock: CharacterData[] = [
-  {
-    id: 1,
-    name: 'Character Name',
-    status: 'Status',
-    species: 'Species',
-    type: 'Type',
-    gender: 'Gender',
-    origin: {
-      name: 'Name of origin',
-      url: 'origin_url',
-    },
-    location: {
-      name: 'Name of location',
-      url: 'location_url',
-    },
-    image: 'image_url',
-    episode: [],
-    url: 'url',
-    created: 'created',
-  },
-];
-
-const getCharactersArray = (length: number) => {
-  return Array.from(Array(length), (_, ind) =>
-    Object.assign({}, ...characterDataMock, { id: ind + 1 })
-  );
-};
-
 class DataLoader {
-  private static totalAmount: number = 0;
+  private static results: CharacterData[] = [];
 
-  static setTotalAmount(amount: number) {
-    DataLoader.totalAmount = amount;
+  static setResults(results: CharacterData[]) {
+    DataLoader.results = results;
   }
 
   async getData(searchTerm: string, page: number, itemsPerPage: number) {
-    const characters = getCharactersArray(DataLoader.totalAmount);
+    const characters = DataLoader.results;
     const pagesCount = Math.ceil(characters.length / itemsPerPage);
 
     return {
       results: characters,
       pages: pagesCount,
     };
+  }
+
+  async getCharacterData(id: string): Promise<CharacterData> {
+    const characters = DataLoader.results;
+    const foundCharacters = characters.filter((c) => `${c.id}` === id);
+
+    return foundCharacters[0];
   }
 }
 

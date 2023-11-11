@@ -4,13 +4,14 @@ import App from '../src/components/App/App';
 import '@testing-library/jest-dom';
 import { TEST_ID as CHRCTRS_LIST_TEST_ID } from '../src/components/CharactersList/CharactersList';
 import DataLoader from '../src/services/dataLoader/__mocks__/dataLoader';
+import { getRandomCharactersArray } from './utils/utils';
 
 vi.mock('../src/services/dataLoader/dataLoader');
 
 describe('Card List Component', () => {
   it('renders the specified number of cards', async () => {
-    const totalAmount = Math.ceil(Math.random() * 100 + 5);
-    DataLoader.setTotalAmount(totalAmount);
+    const characters = getRandomCharactersArray();
+    DataLoader.setResults(characters);
 
     render(<App />);
 
@@ -18,15 +19,14 @@ describe('Card List Component', () => {
       const characterCards = screen.getByTestId(CHRCTRS_LIST_TEST_ID).children;
 
       expect(characterCards.length > 0).toBe(true);
-      expect(characterCards.length).toEqual(totalAmount);
+      expect(characterCards.length).toEqual(characters.length);
     });
   });
 });
 
 describe('Appropriate message', () => {
   it('is displayed if no cards are present', async () => {
-    const totalAmount = 0;
-    DataLoader.setTotalAmount(totalAmount);
+    DataLoader.setResults([]);
 
     render(<App />);
 

@@ -1,6 +1,8 @@
 import { CharacterData } from '../../types/types';
 import './CharacterCard.scss';
 
+export const TEST_ID = 'character-card';
+
 function CharacterCard({
   name,
   status,
@@ -9,7 +11,7 @@ function CharacterCard({
   image,
 }: CharacterData) {
   return (
-    <div className="character-card">
+    <div className="character-card" data-testid={TEST_ID}>
       <div className="character-image">
         <img src={image} />
       </div>

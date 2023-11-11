@@ -14,9 +14,6 @@ export interface CharacterData {
     url: string;
   };
   image: string;
-  episode: string[];
-  url: string;
-  created: string;
 }
 
 export interface Response {

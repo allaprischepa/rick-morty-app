@@ -6,6 +6,9 @@ import Loader from '../Loader/Loader';
 import notFoundImage from '../../assets/images/empty-avatar.jpeg';
 import './CharacterDetails.scss';
 
+export const TEST_ID = 'character-details';
+export const CLOSE_BTN_TEST_ID = 'close-btn';
+
 type Data = CharacterData | null;
 
 function CharacterDetails() {
@@ -44,10 +47,14 @@ function CharacterDetails() {
     <>
       {loader ? <Loader /> : null}
       {characterData !== null ? (
-        <div className="character-details-container">
+        <div className="character-details-container" data-testid={TEST_ID}>
           <div className="overlay" onClick={closeDetails}></div>
           <div className="details-container">
-            <button className="close-button" onClick={closeDetails} />
+            <button
+              className="close-button"
+              onClick={closeDetails}
+              data-testid={CLOSE_BTN_TEST_ID}
+            />
             <div className="character-details">
               {characterData ? (
                 <>
