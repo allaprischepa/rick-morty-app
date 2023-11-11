@@ -1,10 +1,15 @@
-import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
+import {
+  Outlet,
+  RouteObject,
+  RouterProvider,
+  createBrowserRouter,
+} from 'react-router-dom';
 import MainPage from '../pages/MainPage/MainPage';
 import './App.scss';
 import ErrorPage from '../pages/ErrorPage/ErrorPage';
 import CharacterDetails from '../CharacterDetails/CharacterDetails';
 
-const router = createBrowserRouter([
+export const routesConfig: RouteObject[] = [
   {
     path: '/',
     element: <Outlet />,
@@ -23,10 +28,10 @@ const router = createBrowserRouter([
       },
     ],
   },
-]);
+];
 
 function App() {
-  return <RouterProvider router={router} />;
+  return <RouterProvider router={createBrowserRouter(routesConfig)} />;
 }
 
 export default App;

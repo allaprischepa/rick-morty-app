@@ -2,6 +2,8 @@ import './Pager.scss';
 import { useContext } from 'react';
 import { MainPageContext } from '../pages/MainPage/MainPage';
 
+export const TEST_ID = 'pager';
+
 interface Props {
   pagerGap?: number;
 }
@@ -80,7 +82,11 @@ function Pager({ pagerGap = 0 }: Props) {
   if (nextPage) pagerContent.push(nextPage);
   pagerContent.push(lastPage);
 
-  return pagerContent ? <div className="pager">{pagerContent}</div> : <></>;
+  return pagerContent ? (
+    <div className="pager" data-testid={TEST_ID}>
+      {pagerContent}
+    </div>
+  ) : null;
 }
 
 export default Pager;
