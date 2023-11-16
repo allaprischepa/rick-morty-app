@@ -1,14 +1,14 @@
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import './SearchBar.scss';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../state/store';
+import { useDispatch } from 'react-redux';
+import { useSelectorCustom } from '../../state/store';
 import { updateSearchTerm } from '../../state/searchTerm/searchTermSlice';
 import { useNavigate } from 'react-router-dom';
 
 export const TEST_ID = 'search-bar';
 
 function SearchBar() {
-  const searchTerm = useSelector((state: RootState) => state.searchTerm.value);
+  const searchTerm = useSelectorCustom('searchTerm');
   const inputElement = useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = useState(searchTerm);
   const dispatch = useDispatch();

@@ -23,4 +23,4 @@ export const searchTermSlice = createSlice({
 
 export const { updateSearchTerm } = searchTermSlice.actions;
 
-export default searchTermSlice.reducer;
+export const searchTermReducer = searchTermSlice.reducer;

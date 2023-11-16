@@ -5,17 +5,13 @@ import Logo from '../../Logo/Logo';
 import ErrorButton from '../../ErrorButton/ErrorButton';
 import ErrorBoundary from '../../ErrorBoundary/ErrorBoundary';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
-import { API_ITEMS_PER_PAGE } from '../../../services/dataLoader/settings';
 import DataLoader from '../../../services/dataLoader/dataLoader';
 import Loader from '../../Loader/Loader';
 import { CharacterData } from '../../../types/types';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../state/store';
+import { useSelectorCustom } from '../../../state/store';
 
 interface Context {
   page: number;
-  itemsPerPage: number;
-  updateItemsPerPage: (val: number) => void;
   charactersData: CharacterData[] | null;
   pagesCount: number;
   goTo: (val: string) => void;
@@ -24,8 +20,6 @@ interface Context {
 
 export const defaultContext: Context = {
   page: 1,
-  itemsPerPage: API_ITEMS_PER_PAGE,
-  updateItemsPerPage: () => {},
   charactersData: null,
   pagesCount: 0,
   goTo: () => {},
@@ -35,8 +29,9 @@ export const defaultContext: Context = {
 export const MainPageContext = createContext<Context>(defaultContext);
 
 function MainPage() {
-  const searchTerm = useSelector((state: RootState) => state.searchTerm.value);
-  const [itemsPerPage, setItemsPerPage] = useState(API_ITEMS_PER_PAGE);
+  const searchTerm = useSelectorCustom('searchTerm');
+  const itemsPerPage = useSelectorCustom('itemsPerPage');
+
   const [charactersData, setCharactersData] = useState<CharacterData[] | null>(
     null
   );
@@ -70,11 +65,6 @@ function MainPage() {
     loadData(searchTerm, page);
   }, [pageID, navigate, searchTerm, itemsPerPage]);
 
-  const updateItemsPerPage = (value: number) => {
-    setItemsPerPage(value);
-    navigate('/page/1', { replace: true });
-  };
-
   const goTo = (link: string) => {
     navigate(link);
   };
@@ -86,8 +76,6 @@ function MainPage() {
   const context = {
     searchTerm,
     page: +(pageID || 1),
-    itemsPerPage,
-    updateItemsPerPage,
     charactersData,
     pagesCount,
     goTo,

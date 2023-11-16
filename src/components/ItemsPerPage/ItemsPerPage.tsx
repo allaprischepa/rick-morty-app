@@ -1,14 +1,20 @@
-import { ChangeEvent, useContext } from 'react';
+import { ChangeEvent } from 'react';
 import { API_ITEMS_PER_PAGE } from '../../services/dataLoader/settings';
 import './ItemsPerPage.scss';
-import { MainPageContext } from '../pages/MainPage/MainPage';
+import { useSelectorCustom } from '../../state/store';
+import { useDispatch } from 'react-redux';
+import { updateItemsPerPage } from '../../state/itemsPerPage/itemsPerPageSlice';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   optionsCount?: number;
 }
 
 function ItemsPerPage({ optionsCount = 3 }: Props) {
-  const { itemsPerPage, updateItemsPerPage } = useContext(MainPageContext);
+  const itemsPerPage = useSelectorCustom('itemsPerPage');
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const options: JSX.Element[] = [];
 
   for (let i = 1; i <= optionsCount; i++) {
@@ -20,8 +26,12 @@ function ItemsPerPage({ optionsCount = 3 }: Props) {
     );
   }
 
-  const handleChangeEvent = (event: ChangeEvent<HTMLSelectElement>) =>
-    updateItemsPerPage(+event.target.value);
+  const handleChangeEvent = (event: ChangeEvent<HTMLSelectElement>) => {
+    const value = +event.target.value;
+    dispatch(updateItemsPerPage(value));
+
+    if (itemsPerPage !== value) navigate('/page/1', { replace: true });
+  };
 
   return (
     <div className="items-per-page">

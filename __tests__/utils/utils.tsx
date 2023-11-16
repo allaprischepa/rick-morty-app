@@ -3,7 +3,8 @@ import { render } from '@testing-library/react';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { CharacterData } from '../../src/types/types';
-import searchTermReducer from '../../src/state/searchTerm/searchTermSlice';
+import { searchTermReducer } from '../../src/state/searchTerm/searchTermSlice';
+import { itemsPerPageReducer } from '../../src/state/itemsPerPage/itemsPerPageSlice';
 
 const characterDataMock: CharacterData[] = [
   {
@@ -42,6 +43,7 @@ export function renderWithProviders(ui: React.ReactElement) {
   const store = configureStore({
     reducer: {
       searchTerm: searchTermReducer,
+      itemsPerPage: itemsPerPageReducer,
     },
   });
 
