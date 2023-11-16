@@ -1,4 +1,9 @@
+import React, { PropsWithChildren } from 'react';
+import { render } from '@testing-library/react';
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
 import { CharacterData } from '../../src/types/types';
+import searchTermReducer from '../../src/state/searchTerm/searchTermSlice';
 
 const characterDataMock: CharacterData[] = [
   {
@@ -32,3 +37,17 @@ export const getRandomCharactersArray = () => {
     Object.assign({}, ...characterDataMock, { id: ind + 1 })
   );
 };
+
+export function renderWithProviders(ui: React.ReactElement) {
+  const store = configureStore({
+    reducer: {
+      searchTerm: searchTermReducer,
+    },
+  });
+
+  function Wrapper({ children }: PropsWithChildren): JSX.Element {
+    return <Provider store={store}>{children}</Provider>;
+  }
+
+  return { store, ...render(ui, { wrapper: Wrapper }) };
+}

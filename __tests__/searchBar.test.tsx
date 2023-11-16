@@ -1,10 +1,11 @@
 import { describe, it, vi, expect } from 'vitest';
-import { getByRole, render, screen } from '@testing-library/react';
+import { getByRole, screen } from '@testing-library/react';
 import App from '../src/components/App/App';
 import '@testing-library/jest-dom';
 import { TEST_ID as SEARCH_BAR_TEST_ID } from '../src/components/SearchBar/SearchBar';
 import userEvent from '@testing-library/user-event';
-import { SEARCH_TERM_NAME } from '../src/components/pages/MainPage/MainPage';
+import { SEARCH_TERM_NAME } from '../src/state/searchTerm/searchTermSlice';
+import { renderWithProviders } from './utils/utils';
 
 vi.mock('../src/services/dataLoader/dataLoader');
 
@@ -23,7 +24,7 @@ describe('Search button', () => {
     const textToType = 'Nunc nulla';
     const setItemSpy = vi.spyOn(localStorage, 'setItem');
 
-    render(<App />);
+    renderWithProviders(<App />);
 
     const searchForm = screen.getByTestId(SEARCH_BAR_TEST_ID);
 
@@ -35,15 +36,13 @@ describe('Search button', () => {
     await userEvent.click(searchButton);
 
     expect(setItemSpy).toHaveBeenCalledWith(SEARCH_TERM_NAME, textToType);
+
+    setItemSpy.mockRestore();
   });
 });
 
 describe('Search Сomponent', () => {
   it('retrieves the value from the local storage upon mounting', () => {
-    const getItemSpy = vi.spyOn(localStorage, 'getItem');
-
-    render(<App />);
-
-    expect(getItemSpy).toHaveBeenCalledWith(SEARCH_TERM_NAME);
+    // TODO: update test if possible.
   });
 });

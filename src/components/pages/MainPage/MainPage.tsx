@@ -9,12 +9,12 @@ import { API_ITEMS_PER_PAGE } from '../../../services/dataLoader/settings';
 import DataLoader from '../../../services/dataLoader/dataLoader';
 import Loader from '../../Loader/Loader';
 import { CharacterData } from '../../../types/types';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../state/store';
 
 interface Context {
-  searchTerm: string;
   page: number;
   itemsPerPage: number;
-  updateSearchTerm: (val: string) => void;
   updateItemsPerPage: (val: number) => void;
   charactersData: CharacterData[] | null;
   pagesCount: number;
@@ -23,10 +23,8 @@ interface Context {
 }
 
 export const defaultContext: Context = {
-  searchTerm: '',
   page: 1,
   itemsPerPage: API_ITEMS_PER_PAGE,
-  updateSearchTerm: () => {},
   updateItemsPerPage: () => {},
   charactersData: null,
   pagesCount: 0,
@@ -35,11 +33,9 @@ export const defaultContext: Context = {
 };
 
 export const MainPageContext = createContext<Context>(defaultContext);
-export const SEARCH_TERM_NAME = 'RMAppSearchTerm';
 
 function MainPage() {
-  const savedTerm = localStorage.getItem(SEARCH_TERM_NAME);
-  const [searchTerm, setSearchTerm] = useState(savedTerm ?? '');
+  const searchTerm = useSelector((state: RootState) => state.searchTerm.value);
   const [itemsPerPage, setItemsPerPage] = useState(API_ITEMS_PER_PAGE);
   const [charactersData, setCharactersData] = useState<CharacterData[] | null>(
     null
@@ -74,13 +70,6 @@ function MainPage() {
     loadData(searchTerm, page);
   }, [pageID, navigate, searchTerm, itemsPerPage]);
 
-  const updateSearchTerm = (value: string) => {
-    setSearchTerm(value);
-    localStorage.setItem(SEARCH_TERM_NAME, value);
-
-    navigate('/page/1', { replace: true });
-  };
-
   const updateItemsPerPage = (value: number) => {
     setItemsPerPage(value);
     navigate('/page/1', { replace: true });
@@ -98,7 +87,6 @@ function MainPage() {
     searchTerm,
     page: +(pageID || 1),
     itemsPerPage,
-    updateSearchTerm,
     updateItemsPerPage,
     charactersData,
     pagesCount,

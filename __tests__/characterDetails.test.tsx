@@ -1,5 +1,5 @@
 import { describe, it, vi, expect, afterEach } from 'vitest';
-import { render, screen, getByText, getByTestId } from '@testing-library/react';
+import { screen, getByText, getByTestId } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import App from '../src/components/App/App';
@@ -11,6 +11,7 @@ import {
   CLOSE_BTN_TEST_ID,
 } from '../src/components/CharacterDetails/CharacterDetails';
 import { TEST_ID as LOADER_TEST_ID } from '../src/components/Loader/Loader';
+import { renderWithProviders } from './utils/utils';
 
 vi.mock('../src/services/dataLoader/dataLoader');
 
@@ -40,7 +41,7 @@ describe('Loading Indicator', () => {
   it('is displayed while fetching the Details data', async () => {
     DataLoader.setResults([character]);
 
-    render(<App />);
+    renderWithProviders(<App />);
 
     const card = await screen.findByTestId(CHRCTR_CARD_TEST_ID);
     expect(card).toBeInTheDocument();
@@ -56,7 +57,7 @@ describe('Detailed Card Component', () => {
   it('correctly displays the detailed card data', async () => {
     DataLoader.setResults([character]);
 
-    render(<App />);
+    renderWithProviders(<App />);
 
     const card = await screen.findByTestId(CHRCTR_CARD_TEST_ID);
     expect(card).toBeInTheDocument();
@@ -80,7 +81,7 @@ describe('Clicking On The Close Button', () => {
   it('hides the Details component', async () => {
     DataLoader.setResults([character]);
 
-    render(<App />);
+    renderWithProviders(<App />);
 
     const card = await screen.findByTestId(CHRCTR_CARD_TEST_ID);
     expect(card).toBeInTheDocument();

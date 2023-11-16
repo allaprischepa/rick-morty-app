@@ -1,9 +1,9 @@
 import { describe, it, vi, expect } from 'vitest';
-import { render, screen, getByTitle } from '@testing-library/react';
+import { screen, getByTitle } from '@testing-library/react';
 import App from '../src/components/App/App';
 import '@testing-library/jest-dom';
 import DataLoader from '../src/services/dataLoader/__mocks__/dataLoader';
-import { getCharactersArray } from './utils/utils';
+import { getCharactersArray, renderWithProviders } from './utils/utils';
 import { TEST_ID as PAGER_TEST_ID } from '../src/components/Pager/Pager';
 import userEvent from '@testing-library/user-event';
 
@@ -14,7 +14,7 @@ describe('Pagination Сomponent:', () => {
     const characters = getCharactersArray(500);
     DataLoader.setResults(characters);
 
-    render(<App />);
+    renderWithProviders(<App />);
 
     const pager = await screen.findByTestId(PAGER_TEST_ID);
     expect(pager).toBeInTheDocument();

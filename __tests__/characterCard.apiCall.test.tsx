@@ -1,5 +1,5 @@
 import { describe, it, vi, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import App from '../src/components/App/App';
 import '@testing-library/jest-dom';
 import { CharacterData } from '../src/types/types';
@@ -7,6 +7,7 @@ import { TEST_ID as CHRCTR_CARD_TEST_ID } from '../src/components/CharacterCard/
 import userEvent from '@testing-library/user-event';
 import { TEST_ID as CHRCTR_DTLS_TEST_ID } from '../src/components/CharacterDetails/CharacterDetails';
 import { API_URL, httpStatus } from '../src/services/dataLoader/settings';
+import { renderWithProviders } from './utils/utils';
 
 const character: CharacterData = {
   id: 6,
@@ -51,7 +52,7 @@ global.fetch = fetchMock;
 
 describe('Click On A Card', () => {
   it('triggers an additional API call to fetch detailed information.', async () => {
-    render(<App />);
+    renderWithProviders(<App />);
 
     const card = await screen.findByTestId(CHRCTR_CARD_TEST_ID);
     expect(card).toBeInTheDocument();

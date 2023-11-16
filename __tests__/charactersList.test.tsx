@@ -1,10 +1,10 @@
 import { describe, it, vi, expect } from 'vitest';
-import { render, waitFor, screen } from '@testing-library/react';
+import { waitFor, screen } from '@testing-library/react';
 import App from '../src/components/App/App';
 import '@testing-library/jest-dom';
 import { TEST_ID as CHRCTRS_LIST_TEST_ID } from '../src/components/CharactersList/CharactersList';
 import DataLoader from '../src/services/dataLoader/__mocks__/dataLoader';
-import { getRandomCharactersArray } from './utils/utils';
+import { getRandomCharactersArray, renderWithProviders } from './utils/utils';
 
 vi.mock('../src/services/dataLoader/dataLoader');
 
@@ -13,7 +13,7 @@ describe('Card List Component', () => {
     const characters = getRandomCharactersArray();
     DataLoader.setResults(characters);
 
-    render(<App />);
+    renderWithProviders(<App />);
 
     await waitFor(() => {
       const characterCards = screen.getByTestId(CHRCTRS_LIST_TEST_ID).children;
@@ -28,7 +28,7 @@ describe('Appropriate message', () => {
   it('is displayed if no cards are present', async () => {
     DataLoader.setResults([]);
 
-    render(<App />);
+    renderWithProviders(<App />);
 
     await waitFor(() => {
       const characterCards = screen.getByTestId(CHRCTRS_LIST_TEST_ID).children;

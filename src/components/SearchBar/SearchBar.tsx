@@ -1,13 +1,18 @@
-import { ChangeEvent, FormEvent, useContext, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import './SearchBar.scss';
-import { MainPageContext } from '../pages/MainPage/MainPage';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../state/store';
+import { updateSearchTerm } from '../../state/searchTerm/searchTermSlice';
+import { useNavigate } from 'react-router-dom';
 
 export const TEST_ID = 'search-bar';
 
 function SearchBar() {
-  const { searchTerm, updateSearchTerm } = useContext(MainPageContext);
+  const searchTerm = useSelector((state: RootState) => state.searchTerm.value);
   const inputElement = useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = useState(searchTerm);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -17,7 +22,9 @@ function SearchBar() {
     if (current) {
       const value = current.value.trim();
       setInputValue(value);
-      updateSearchTerm(value);
+      dispatch(updateSearchTerm(value));
+
+      if (searchTerm !== value) navigate('/page/1', { replace: true });
     }
   };
 
