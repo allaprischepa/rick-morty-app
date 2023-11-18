@@ -11,6 +11,7 @@ import Loader from '../Loader/Loader';
 import { useDispatch } from 'react-redux';
 import { turnOff, turnOn } from '../../state/loadingList/loadingListSlice';
 import { useEffect, useState } from 'react';
+import ViewMode from '../ViewMode/ViewMode';
 
 export const TEST_ID = 'characters-list';
 
@@ -20,6 +21,7 @@ function CharactersList() {
   const searchTerm = useSelectorCustom('searchTerm');
   const itemsPerPage = useSelectorCustom('itemsPerPage');
   const loadingList = useSelectorCustom('loadingList');
+  const viewMode = useSelectorCustom('viewMode');
   const { pageID } = useParams();
   const page = +(pageID || 1);
   const [charactersData, setCharactersData] = useState<DataType>(null);
@@ -74,10 +76,14 @@ function CharactersList() {
           <>
             <Pager currentPage={page} pagesCount={pagesCount} />
             <ItemsPerPage />
+            <ViewMode />
           </>
         ) : null}
       </div>
-      <div className="characters-list" data-testid={TEST_ID}>
+      <div
+        className={`characters-list view-mode_${viewMode}`}
+        data-testid={TEST_ID}
+      >
         {showData(charactersData)}
       </div>
     </>

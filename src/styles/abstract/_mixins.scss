@@ -21,3 +21,15 @@
     background-color: darken($button-color, 5);
   }
 }
+
+@mixin viewModeIcon($iconPath) {
+  content: '';
+  display: block;
+  width: 70%;
+  height: 70%;
+  margin: auto;
+  background-size: cover;
+  background-color: $black-color;
+  -webkit-mask: url('#{$iconPath}') no-repeat center / contain;
+  mask: url('#{$iconPath}') no-repeat center / contain;
+}

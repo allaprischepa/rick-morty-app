@@ -1,0 +1,28 @@
+@import '../../styles/abstract/mixins';
+@import '../../styles/abstract/variables';
+
+.view-mode {
+  display: flex;
+  gap: 5px;
+
+  * {
+    @include button($gray-color-3);
+
+    width: 30px;
+    height: 30px;
+    padding: 0;
+
+    &.active {
+      pointer-events: none;
+      background-color: $secondary-color-light;
+    }
+
+    &.list::after {
+      @include viewModeIcon('../../assets/icons/list.png');
+    }
+
+    &.grid::after {
+      @include viewModeIcon('../../assets/icons/grid.png');
+    }
+  }
+}
