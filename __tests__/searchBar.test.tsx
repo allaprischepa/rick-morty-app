@@ -7,8 +7,6 @@ import userEvent from '@testing-library/user-event';
 import { SEARCH_TERM_NAME } from '../src/state/searchTerm/searchTermSlice';
 import { renderWithProviders } from './utils/utils';
 
-vi.mock('../src/services/dataLoader/dataLoader');
-
 window.localStorage = {
   length: 1,
   key: vi.fn(),

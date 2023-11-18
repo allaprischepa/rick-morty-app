@@ -1,5 +1,5 @@
 import { ChangeEvent } from 'react';
-import { API_ITEMS_PER_PAGE } from '../../services/dataLoader/settings';
+import { API_ITEMS_PER_PAGE } from '../../services/api/settings';
 import './ItemsPerPage.scss';
 import { useSelectorCustom } from '../../state/store';
 import { useDispatch } from 'react-redux';

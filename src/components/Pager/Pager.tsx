@@ -1,19 +1,16 @@
 import './Pager.scss';
-import { useContext } from 'react';
-import { MainPageContext } from '../pages/MainPage/MainPage';
+import { useNavigate } from 'react-router-dom';
 
 export const TEST_ID = 'pager';
 
 interface Props {
+  currentPage: number;
+  pagesCount: number;
   pagerGap?: number;
 }
 
-function Pager({ pagerGap = 0 }: Props) {
-  const {
-    page: currentPage,
-    pagesCount,
-    goToPage,
-  } = useContext(MainPageContext);
+function Pager({ currentPage, pagesCount, pagerGap = 0 }: Props) {
+  const navigate = useNavigate();
 
   if (pagesCount <= 0) return <></>;
 
@@ -30,7 +27,7 @@ function Pager({ pagerGap = 0 }: Props) {
         className={className}
         key={key}
         title={`page ${pageNum}`}
-        onClick={() => goToPage(pageNum)}
+        onClick={() => navigate(`/page/${pageNum}`)}
       >
         {content}
       </button>

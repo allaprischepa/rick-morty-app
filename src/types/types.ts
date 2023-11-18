@@ -16,6 +16,14 @@ export interface CharacterData {
   image: string;
 }
 
+export interface APIResponse {
+  results: CharacterData[];
+  info: {
+    count: number;
+    pages: number;
+  };
+}
+
 export interface Response {
   results: CharacterData[];
   pages: number;

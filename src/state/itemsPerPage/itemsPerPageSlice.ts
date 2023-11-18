@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { API_ITEMS_PER_PAGE } from '../../services/dataLoader/settings';
+import { API_ITEMS_PER_PAGE } from '../../services/api/settings';
 
 interface ItemsPerPageState {
   value: number;

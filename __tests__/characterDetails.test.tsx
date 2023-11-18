@@ -1,9 +1,8 @@
-import { describe, it, vi, expect, afterEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { screen, getByText, getByTestId } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import App from '../src/components/App/App';
-import DataLoader from '../src/services/dataLoader/__mocks__/dataLoader';
 import { CharacterData } from '../src/types/types';
 import { TEST_ID as CHRCTR_CARD_TEST_ID } from '../src/components/CharacterCard/CharacterCard';
 import {
@@ -12,12 +11,8 @@ import {
 } from '../src/components/CharacterDetails/CharacterDetails';
 import { TEST_ID as LOADER_TEST_ID } from '../src/components/Loader/Loader';
 import { renderWithProviders } from './utils/utils';
-
-vi.mock('../src/services/dataLoader/dataLoader');
-
-afterEach(() => {
-  vi.clearAllMocks();
-});
+import { getHandlersByMockedArray } from '../src/services/api/__mocks__/handler';
+import { server } from '../src/services/api/__mocks__/server';
 
 const character: CharacterData = {
   id: 8,
@@ -39,14 +34,14 @@ const character: CharacterData = {
 
 describe('Loading Indicator', () => {
   it('is displayed while fetching the Details data', async () => {
-    DataLoader.setResults([character]);
+    server.use(...getHandlersByMockedArray([character]));
 
     renderWithProviders(<App />);
 
     const card = await screen.findByTestId(CHRCTR_CARD_TEST_ID);
     expect(card).toBeInTheDocument();
 
-    await userEvent.click(card);
+    userEvent.click(card);
 
     const loader = await screen.findByTestId(LOADER_TEST_ID);
     expect(loader).toBeInTheDocument();
@@ -55,8 +50,7 @@ describe('Loading Indicator', () => {
 
 describe('Detailed Card Component', () => {
   it('correctly displays the detailed card data', async () => {
-    DataLoader.setResults([character]);
-
+    server.use(...getHandlersByMockedArray([character]));
     renderWithProviders(<App />);
 
     const card = await screen.findByTestId(CHRCTR_CARD_TEST_ID);
@@ -79,7 +73,7 @@ describe('Detailed Card Component', () => {
 
 describe('Clicking On The Close Button', () => {
   it('hides the Details component', async () => {
-    DataLoader.setResults([character]);
+    server.use(...getHandlersByMockedArray([character]));
 
     renderWithProviders(<App />);
 
