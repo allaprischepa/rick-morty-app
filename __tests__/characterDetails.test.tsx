@@ -41,7 +41,7 @@ describe('Loading Indicator', () => {
     const card = await screen.findByTestId(CHRCTR_CARD_TEST_ID);
     expect(card).toBeInTheDocument();
 
-    userEvent.click(card);
+    await userEvent.click(card);
 
     const loader = await screen.findByTestId(LOADER_TEST_ID);
     expect(loader).toBeInTheDocument();

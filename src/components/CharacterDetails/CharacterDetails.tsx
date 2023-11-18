@@ -3,6 +3,13 @@ import Loader from '../Loader/Loader';
 import notFoundImage from '../../assets/images/empty-avatar.jpeg';
 import './CharacterDetails.scss';
 import { useGetCharacterDataQuery } from '../../services/api/rickMortyApi';
+import { useDispatch } from 'react-redux';
+import {
+  turnOff,
+  turnOn,
+} from '../../state/loadingDetails/loadingDetailsSlice';
+import { useSelectorCustom } from '../../state/store';
+import { useEffect } from 'react';
 
 export const TEST_ID = 'character-details';
 export const CLOSE_BTN_TEST_ID = 'close-btn';
@@ -10,13 +17,21 @@ export const CLOSE_BTN_TEST_ID = 'close-btn';
 function CharacterDetails() {
   const { characterID: id = '' } = useParams();
   const NOT_SPECIFIED = 'not specified';
+  const loadingDetails = useSelectorCustom('loadingDetails');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { data, isFetching } = useGetCharacterDataQuery(id);
 
   const closeDetails = () => navigate('..');
 
-  if (isFetching) return <Loader />;
+  useEffect(() => {
+    isFetching && !loadingDetails
+      ? dispatch(turnOn())
+      : setTimeout(() => dispatch(turnOff()), 250);
+  }, [isFetching, loadingDetails, dispatch]);
+
+  if (loadingDetails) return <Loader />;
 
   return (
     <div className="character-details-container" data-testid={TEST_ID}>

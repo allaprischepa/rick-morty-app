@@ -8,27 +8,50 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useSelectorCustom } from '../../state/store';
 import { useGetDataQuery } from '../../services/api/rickMortyApi';
 import Loader from '../Loader/Loader';
+import { useDispatch } from 'react-redux';
+import { turnOff, turnOn } from '../../state/loadingList/loadingListSlice';
+import { useEffect, useState } from 'react';
 
 export const TEST_ID = 'characters-list';
+
+type DataType = CharacterData[] | null;
 
 function CharactersList() {
   const searchTerm = useSelectorCustom('searchTerm');
   const itemsPerPage = useSelectorCustom('itemsPerPage');
+  const loadingList = useSelectorCustom('loadingList');
   const { pageID } = useParams();
   const page = +(pageID || 1);
+  const [charactersData, setCharactersData] = useState<DataType>(null);
+  const [pagesCount, setPagesCount] = useState(0);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { data, isFetching } = useGetDataQuery({
     searchTerm,
     page,
     itemsPerPage,
   });
 
-  const charactersData = data?.results ?? null;
-  const pagesCount = data?.pages ?? 0;
+  useEffect(() => {
+    isFetching && !loadingList
+      ? dispatch(turnOn())
+      : setTimeout(() => dispatch(turnOff()), 250);
 
-  const showData = (
-    data: CharacterData[] | null
-  ): JSX.Element | JSX.Element[] => {
+    if (!loadingList) {
+      setCharactersData(data?.results ?? null);
+      setPagesCount(data?.pages ?? 0);
+    }
+  }, [
+    charactersData,
+    pagesCount,
+    isFetching,
+    loadingList,
+    data?.results,
+    data?.pages,
+    dispatch,
+  ]);
+
+  const showData = (data: DataType): JSX.Element | JSX.Element[] => {
     if (data === null) return <></>;
     if (!data.length) return <NotFoundCard />;
 
@@ -45,10 +68,14 @@ function CharactersList() {
 
   return (
     <>
-      {isFetching ? <Loader /> : null}
+      {loadingList ? <Loader /> : null}
       <div className="controls">
-        <Pager currentPage={page} pagesCount={pagesCount} />
-        <ItemsPerPage />
+        {pagesCount ? (
+          <>
+            <Pager currentPage={page} pagesCount={pagesCount} />
+            <ItemsPerPage />
+          </>
+        ) : null}
       </div>
       <div className="characters-list" data-testid={TEST_ID}>
         {showData(charactersData)}

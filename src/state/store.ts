@@ -10,11 +10,15 @@ import {
   rickMortyApi,
   rickMortyApiReducer,
 } from '../services/api/rickMortyApi';
+import { loadingListReducer } from './loadingList/loadingListSlice';
+import { loadingDetailsReducer } from './loadingDetails/loadingDetailsSlice';
 
 const rootReducer = combineReducers({
   searchTerm: searchTermReducer,
   itemsPerPage: itemsPerPageReducer,
   rickMortyApi: rickMortyApiReducer,
+  loadingList: loadingListReducer,
+  loadingDetails: loadingDetailsReducer,
 });
 
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
@@ -32,7 +36,8 @@ export type AppStore = typeof store;
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
 
-export function useSelectorCustom<K extends 'searchTerm' | 'itemsPerPage'>(
+type Keys = 'searchTerm' | 'itemsPerPage' | 'loadingList' | 'loadingDetails';
+export function useSelectorCustom<K extends Keys>(
   key: K
 ): RootState[K]['value'] {
   return useSelector((state: RootState) => state[key]['value']);
