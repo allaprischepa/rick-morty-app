@@ -35,21 +35,6 @@ export const getRandomCharactersArray = () => {
   );
 };
 
-// export const handlers = [
-//   http.get(`${API_URL}`, () => {
-//     return HttpResponse.json({
-//       results: getCharactersArray(API_ITEMS_PER_PAGE),
-//       info: {
-//         pages: 1,
-//       },
-//     });
-//   }),
-
-//   http.get(`${API_URL}/:id`, () => {
-//     return HttpResponse.json({ characterDataMock });
-//   }),
-// ];
-
 export const getHandlersByMockedArray = (arr: CharacterData[]) => {
   return [
     http.get(`${API_URL}`, ({ request }) => {
