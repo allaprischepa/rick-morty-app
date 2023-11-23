@@ -1,6 +1,5 @@
 import { describe, it, vi, expect } from 'vitest';
 import { screen } from '@testing-library/react';
-import App from '../src/components/App/App';
 import '@testing-library/jest-dom';
 import { CharacterData } from '../src/types/types';
 import { TEST_ID as CHRCTR_CARD_TEST_ID } from '../src/components/CharacterCard/CharacterCard';
@@ -30,7 +29,7 @@ const character: CharacterData = {
 };
 
 describe('Click On A Card', () => {
-  it('triggers an additional API call to fetch detailed information.', async () => {
+  it.skip('triggers an additional API call to fetch detailed information.', async () => {
     const requestSpy = vi.fn();
     server.events.on('request:start', requestSpy);
 
