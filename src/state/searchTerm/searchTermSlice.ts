@@ -8,13 +8,19 @@ interface SearchTermState {
 
 export const searchTermSlice = createSlice({
   name: 'searchTerm',
-  initialState: (): SearchTermState => ({
-    value: localStorage.getItem(SEARCH_TERM_NAME) || '',
-  }),
+  initialState: (): SearchTermState => {
+    let value = '';
+
+    if (typeof window !== 'undefined')
+      value = localStorage.getItem(SEARCH_TERM_NAME) ?? '';
+
+    return { value };
+  },
   reducers: {
     updateSearchTerm: (state, action: PayloadAction<string>) => {
       state.value = action.payload;
-      localStorage.setItem(SEARCH_TERM_NAME, action.payload);
+      if (typeof window !== 'undefined')
+        localStorage.setItem(SEARCH_TERM_NAME, action.payload);
     },
   },
 });

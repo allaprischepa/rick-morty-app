@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './ErrorButton.scss';
+import styles from './ErrorButton.module.scss';
 
 function ErrorButton() {
   const [error, setError] = useState(false);
@@ -7,7 +7,7 @@ function ErrorButton() {
   if (error) throw new Error('An error occurred on button click');
 
   return (
-    <button className="error-button" onClick={() => setError(true)}>
+    <button className={styles.error_button} onClick={() => setError(true)}>
       Click me to show the error
     </button>
   );

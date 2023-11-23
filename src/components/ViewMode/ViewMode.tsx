@@ -6,20 +6,22 @@ import {
   setGrid,
   setList,
 } from '../../state/viewMode/viewModeSlice';
-import './ViewMode.scss';
+import styles from './ViewMode.module.scss';
 
 function ViewMode() {
   const viewMode = useSelectorCustom('viewMode');
   const dispatch = useDispatch();
 
   return (
-    <div className={`view-mode ${viewMode}`}>
+    <div className={`${styles.view_mode} ${styles[viewMode]}`}>
       <button
-        className={`list ${viewMode === VIEW_MODE_LIST ? 'active' : ''}`}
+        className={`${styles.list}
+        ${viewMode === VIEW_MODE_LIST ? styles.active : ''}`}
         onClick={() => dispatch(setList())}
       />
       <button
-        className={`grid ${viewMode === VIEW_MODE_GRID ? 'active' : ''}`}
+        className={`${styles.grid}
+        ${viewMode === VIEW_MODE_GRID ? styles.active : ''}`}
         onClick={() => dispatch(setGrid())}
       />
     </div>

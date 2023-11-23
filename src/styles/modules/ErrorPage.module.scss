@@ -1,7 +1,7 @@
-@import '../../../styles/abstract/variables';
-@import '../../../styles/abstract/mixins';
+@import '../abstract/variables';
+@import '../abstract/mixins';
 
-.error-page {
+.error_page {
   position: absolute;
   top: 0;
   left: 0;
@@ -14,19 +14,19 @@
   align-items: center;
   justify-content: center;
 
-  .error-message {
+  .error_message {
     font-size: 1.5em;
     font-weight: bold;
     text-align: center;
   }
 
-  .reload-button {
+  .reload_button {
     @include button($main-color);
     text-transform: uppercase;
     font-size: 1.4em;
   }
 
-  .home-link {
+  .home_link {
     @include button($secondary-color);
     text-transform: uppercase;
     font-size: 1.4em;

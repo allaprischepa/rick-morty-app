@@ -1,45 +1,20 @@
-import './ErrorPage.scss';
-import { Link, isRouteErrorResponse, useRouteError } from 'react-router-dom';
+import styles from '../../../styles/modules/ErrorPage.module.scss';
+import { useRouter } from 'next/router';
 
 function ErrorPage() {
-  const error = useRouteError();
-  const HTTP_STATUS_NOT_FOUND = 404;
+  const router = useRouter();
 
-  const pageReload = () => {
-    window.location.reload();
-  };
-
-  const notFound = (): JSX.Element => {
-    return (
-      <div className="error-page">
-        <div className="error-message">
-          <div>Sorry... The page is not found.</div>
-          <div>Please, go to Home page.</div>
-        </div>
-        <Link className="button home-link" to="/">
-          Go Home
-        </Link>
+  return (
+    <div className={styles.error_page}>
+      <div className={styles.error_message}>
+        <div>Sorry... The error occurred.</div>
+        <div>Please, try to reload page</div>
       </div>
-    );
-  };
-
-  const someError = (): JSX.Element => {
-    return (
-      <div className="error-page">
-        <div className="error-message">
-          <div>Sorry... The error occurred.</div>
-          <div>Please, try to reload page</div>
-        </div>
-        <button className="reload-button" onClick={pageReload}>
-          Reload page
-        </button>
-      </div>
-    );
-  };
-
-  return isRouteErrorResponse(error) && error.status === HTTP_STATUS_NOT_FOUND
-    ? notFound()
-    : someError();
+      <button className={styles.reload_button} onClick={router.reload}>
+        Reload page
+      </button>
+    </div>
+  );
 }
 
 export default ErrorPage;

@@ -1,9 +1,9 @@
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
-import './SearchBar.scss';
+import s from './SearchBar.module.scss';
 import { useDispatch } from 'react-redux';
 import { useSelectorCustom } from '../../state/store';
 import { updateSearchTerm } from '../../state/searchTerm/searchTermSlice';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 
 export const TEST_ID = 'search-bar';
 
@@ -12,7 +12,7 @@ function SearchBar() {
   const inputElement = useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = useState(searchTerm);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -24,7 +24,7 @@ function SearchBar() {
       setInputValue(value);
       dispatch(updateSearchTerm(value));
 
-      if (searchTerm !== value) navigate('/page/1', { replace: true });
+      if (searchTerm !== value) router.replace('/page/1');
     }
   };
 
@@ -33,16 +33,20 @@ function SearchBar() {
   };
 
   return (
-    <form className="search-bar" onSubmit={handleSubmit} data-testid={TEST_ID}>
+    <form
+      className={s['search-bar']}
+      onSubmit={handleSubmit}
+      data-testid={TEST_ID}
+    >
       <input
         type="text"
         ref={inputElement}
         value={inputValue}
         placeholder="Type the name..."
-        className="search-input"
+        className={s['search-input']}
         onChange={handleChange}
       />
-      <button type="submit" title="Search" className="search-button" />
+      <button type="submit" title="Search" className={s['search-button']} />
     </form>
   );
 }

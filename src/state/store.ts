@@ -13,6 +13,7 @@ import {
 import { loadingListReducer } from './loadingList/loadingListSlice';
 import { loadingDetailsReducer } from './loadingDetails/loadingDetailsSlice';
 import { viewModeSliceReducer } from './viewMode/viewModeSlice';
+import { createWrapper } from 'next-redux-wrapper';
 
 const rootReducer = combineReducers({
   searchTerm: searchTermReducer,
@@ -32,11 +33,9 @@ export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
   });
 };
 
-export const store = setupStore({});
-
-export type AppStore = typeof store;
+export type AppStore = ReturnType<typeof setupStore>;
 export type RootState = ReturnType<typeof rootReducer>;
-export type AppDispatch = typeof store.dispatch;
+export type AppDispatch = ReturnType<typeof setupStore>['dispatch'];
 
 type Keys =
   | 'searchTerm'
@@ -49,3 +48,5 @@ export function useSelectorCustom<K extends Keys>(
 ): RootState[K]['value'] {
   return useSelector((state: RootState) => state[key]['value']);
 }
+
+export const wrapper = createWrapper<AppStore>(setupStore);

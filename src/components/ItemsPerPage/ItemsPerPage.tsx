@@ -1,10 +1,10 @@
 import { ChangeEvent } from 'react';
 import { API_ITEMS_PER_PAGE } from '../../services/api/settings';
-import './ItemsPerPage.scss';
+import styles from './ItemsPerPage.module.scss';
 import { useSelectorCustom } from '../../state/store';
 import { useDispatch } from 'react-redux';
 import { updateItemsPerPage } from '../../state/itemsPerPage/itemsPerPageSlice';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 
 interface Props {
   optionsCount?: number;
@@ -13,7 +13,7 @@ interface Props {
 function ItemsPerPage({ optionsCount = 3 }: Props) {
   const itemsPerPage = useSelectorCustom('itemsPerPage');
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const options: JSX.Element[] = [];
 
@@ -30,13 +30,13 @@ function ItemsPerPage({ optionsCount = 3 }: Props) {
     const value = +event.target.value;
     dispatch(updateItemsPerPage(value));
 
-    if (itemsPerPage !== value) navigate('/page/1', { replace: true });
+    if (itemsPerPage !== value) router.replace('/page/1');
   };
 
   return (
-    <div className="items-per-page">
-      <div className="label">Items per page</div>
-      <div className="select">
+    <div className={styles.items_per_page}>
+      <div className={styles.label}>Items per page</div>
+      <div className={styles.select}>
         <select value={itemsPerPage} onChange={handleChangeEvent}>
           {options}
         </select>
