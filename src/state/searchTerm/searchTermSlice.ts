@@ -6,13 +6,11 @@ interface SearchTermState {
   value: string;
 }
 
-const initialState: SearchTermState = {
-  value: localStorage.getItem(SEARCH_TERM_NAME) || '',
-};
-
 export const searchTermSlice = createSlice({
   name: 'searchTerm',
-  initialState,
+  initialState: (): SearchTermState => ({
+    value: localStorage.getItem(SEARCH_TERM_NAME) || '',
+  }),
   reducers: {
     updateSearchTerm: (state, action: PayloadAction<string>) => {
       state.value = action.payload;

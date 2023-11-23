@@ -1,4 +1,4 @@
-import { describe, it, vi, expect } from 'vitest';
+import { describe, it, vi, expect, afterEach } from 'vitest';
 import { getByRole, screen } from '@testing-library/react';
 import App from '../src/components/App/App';
 import '@testing-library/jest-dom';
@@ -7,20 +7,14 @@ import userEvent from '@testing-library/user-event';
 import { SEARCH_TERM_NAME } from '../src/state/searchTerm/searchTermSlice';
 import { renderWithProviders } from './utils/utils';
 
-window.localStorage = {
-  length: 1,
-  key: vi.fn(),
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  clear: vi.fn(),
-  removeItem: vi.fn(),
-  getAll: vi.fn(),
-};
+afterEach(() => {
+  localStorage.clear();
+});
 
 describe('Search button', () => {
   it('saves the entered value to the local storage', async () => {
     const textToType = 'Nunc nulla';
-    const setItemSpy = vi.spyOn(localStorage, 'setItem');
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
 
     renderWithProviders(<App />);
 
@@ -41,6 +35,19 @@ describe('Search button', () => {
 
 describe('Search Сomponent', () => {
   it('retrieves the value from the local storage upon mounting', () => {
-    // TODO: update test if possible.
+    const text = 'Vivamus elementum';
+
+    localStorage.setItem(SEARCH_TERM_NAME, text);
+
+    const getItemSpy = vi.spyOn(Storage.prototype, 'getItem');
+
+    renderWithProviders(<App />);
+
+    expect(getItemSpy).toBeCalledWith(SEARCH_TERM_NAME);
+
+    const searchForm = screen.getByTestId(SEARCH_BAR_TEST_ID);
+    const searchInput: HTMLInputElement = getByRole(searchForm, 'textbox');
+
+    expect(searchInput.value).toEqual(text);
   });
 });
