@@ -27,7 +27,7 @@ function CharacterDetails() {
   const { data, isFetching } = useGetCharacterDataQuery(id);
 
   const closeDetails = () =>
-    router.push(`/page/${pageID}`, undefined, { scroll: false });
+    router.push(`/page/${pageID}`, undefined, { scroll: false, shallow: true });
 
   useEffect(() => {
     isFetching && !loadingDetails
