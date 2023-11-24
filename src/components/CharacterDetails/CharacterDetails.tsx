@@ -1,41 +1,28 @@
-import Loader from '../Loader/Loader';
 import notFoundImage from '../../assets/images/empty-avatar.jpeg';
 import styles from './CharacterDetails.module.scss';
-import { useGetCharacterDataQuery } from '../../services/api/rickMortyApi';
-import { useDispatch } from 'react-redux';
-import {
-  turnOff,
-  turnOn,
-} from '../../state/loadingDetails/loadingDetailsSlice';
-import { useSelectorCustom } from '../../state/store';
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import { isString } from '../../utils/utils';
 
 export const TEST_ID = 'character-details';
 export const CLOSE_BTN_TEST_ID = 'close-btn';
 
-function CharacterDetails() {
+function CharacterDetails({ data }) {
   const router = useRouter();
-  const { characterID, pageID } = router.query;
-  const id = isString(characterID) ? characterID : '';
+  const { pageID } = router.query;
   const NOT_SPECIFIED = 'not specified';
-  const loadingDetails = useSelectorCustom('loadingDetails');
-  const dispatch = useDispatch();
 
-  const { data, isFetching } = useGetCharacterDataQuery(id);
+  const closeDetails = () => {
+    delete router.query.characterID;
 
-  const closeDetails = () =>
-    router.push(`/page/${pageID}`, undefined, { scroll: false, shallow: true });
-
-  useEffect(() => {
-    isFetching && !loadingDetails
-      ? dispatch(turnOn())
-      : setTimeout(() => dispatch(turnOff()), 250);
-  }, [isFetching, loadingDetails, dispatch]);
-
-  if (loadingDetails) return <Loader />;
+    router.push(
+      {
+        pathname: `/page/${pageID}`,
+        query: { ...router.query },
+      },
+      `/page/${pageID}`,
+      { scroll: false, shallow: true }
+    );
+  };
 
   return (
     <div className={styles.character_details_container} data-testid={TEST_ID}>

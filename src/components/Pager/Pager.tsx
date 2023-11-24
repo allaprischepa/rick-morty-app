@@ -30,7 +30,15 @@ function Pager({ currentPage, pagesCount, pagerGap = 0 }: Props) {
         className={className}
         key={key}
         title={`page ${pageNum}`}
-        onClick={() => router.push(`/page/${pageNum}`)}
+        onClick={() =>
+          router.push(
+            {
+              pathname: `/page/${pageNum}`,
+              query: { ...router.query },
+            },
+            `/page/${pageNum}`
+          )
+        }
       >
         {content}
       </button>

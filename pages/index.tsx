@@ -5,7 +5,13 @@ function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push('/page/1');
+    router.push(
+      {
+        pathname: `/page/1`,
+        query: { ...router.query },
+      },
+      `/page/1`
+    );
   });
 
   return null;

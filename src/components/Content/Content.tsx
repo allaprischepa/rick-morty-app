@@ -5,7 +5,7 @@ import ErrorButton from '../ErrorButton/ErrorButton';
 import { useRouter } from 'next/router';
 import CharacterDetails from '../CharacterDetails/CharacterDetails';
 
-function Content() {
+function Content({ props }) {
   const router = useRouter();
   const { characterID } = router.query;
 
@@ -13,9 +13,9 @@ function Content() {
     <>
       <ErrorButton />
       <Logo />
-      <SearchBar />
-      <CharactersList />
-      {characterID ? <CharacterDetails /> : null}
+      <SearchBar defaultValue={props.searchTerm} />
+      <CharactersList props={props} />
+      {characterID ? <CharacterDetails data={props.characterData} /> : null}
     </>
   );
 }

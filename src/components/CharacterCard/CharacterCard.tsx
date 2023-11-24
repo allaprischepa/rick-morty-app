@@ -1,17 +1,9 @@
-import { useSelectorCustom } from '../../state/store';
-import { CharacterData } from '../../types/types';
 import styles from './CharacterCard.module.scss';
 
 export const TEST_ID = 'character-card';
 
-function CharacterCard({
-  name,
-  status,
-  species,
-  location,
-  image,
-}: CharacterData) {
-  const viewMode = useSelectorCustom('viewMode');
+function CharacterCard({ viewMode, ...character }) {
+  const { name, status, species, location, image } = character;
 
   return (
     <div

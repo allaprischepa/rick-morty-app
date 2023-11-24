@@ -4,82 +4,54 @@ import styles from './CharactersList.module.scss';
 import NotFoundCard from '../NotFoundCard/NotFoundCard';
 import Pager from '../Pager/Pager';
 import ItemsPerPage from '../ItemsPerPage/ItemsPerPage';
-import { useSelectorCustom } from '../../state/store';
-import { useGetDataQuery } from '../../services/api/rickMortyApi';
-import Loader from '../Loader/Loader';
-import { useDispatch } from 'react-redux';
-import { turnOff, turnOn } from '../../state/loadingList/loadingListSlice';
-import { useEffect, useState } from 'react';
 import ViewMode from '../ViewMode/ViewMode';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 
 export const TEST_ID = 'characters-list';
 
 type DataType = CharacterData[] | null;
 
-function CharactersList() {
+function CharactersList({ props }) {
   const router = useRouter();
-  const searchTerm = useSelectorCustom('searchTerm');
-  const itemsPerPage = useSelectorCustom('itemsPerPage');
-  const loadingList = useSelectorCustom('loadingList');
-  const viewMode = useSelectorCustom('viewMode');
-  const pageID = router.query.pageID;
-  const page = +(pageID || 1);
-  const [charactersData, setCharactersData] = useState<DataType>(null);
-  const [pagesCount, setPagesCount] = useState(0);
-  const dispatch = useDispatch();
-  const { data, isFetching } = useGetDataQuery({
-    searchTerm,
-    page,
-    itemsPerPage,
-  });
-
-  useEffect(() => {
-    isFetching && !loadingList
-      ? dispatch(turnOn())
-      : setTimeout(() => dispatch(turnOff()), 250);
-
-    if (!loadingList) {
-      setCharactersData(data?.results ?? null);
-      setPagesCount(data?.pages ?? 0);
-    }
-  }, [
-    charactersData,
-    pagesCount,
-    isFetching,
-    loadingList,
-    data?.results,
-    data?.pages,
-    dispatch,
-  ]);
+  const { listData, viewMode, itemsPerPage } = props;
+  const pageID = +router.query.pageID;
+  const pagesCount = listData.pages;
+  const charactersData = listData.results;
 
   const showData = (data: DataType): JSX.Element | JSX.Element[] => {
     if (data === null) return <></>;
     if (!data.length) return <NotFoundCard />;
 
     return data.map((character: CharacterData) => (
-      <Link
+      <div
         key={character.id}
         className={styles.card_link}
-        href={`${router.pathname}?pageID=${pageID}&characterID=${character.id}`}
-        as={`/page/${pageID}/details/${character.id}`}
-        scroll={false}
+        onClick={() => {
+          const queryParams = { pageID, characterID: character.id };
+
+          router.push(
+            {
+              pathname: `${router.pathname}`,
+              query: { ...router.query, ...queryParams },
+            },
+            `/page/${pageID}/details/${character.id}`,
+            { scroll: false }
+          );
+        }}
       >
-        <CharacterCard {...character} />
-      </Link>
+        <CharacterCard viewMode={viewMode} {...character} />
+      </div>
     ));
   };
 
   return (
     <>
-      {loadingList ? <Loader /> : null}
       <div className={styles.controls}>
         {pagesCount ? (
           <>
-            <Pager currentPage={page} pagesCount={pagesCount} />
-            <ItemsPerPage />
-            <ViewMode />
+            <Pager currentPage={pageID} pagesCount={pagesCount} />
+            <ItemsPerPage defaultValue={itemsPerPage} />
+            <ViewMode viewMode={viewMode} />
           </>
         ) : null}
       </div>

@@ -1,17 +1,12 @@
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import s from './SearchBar.module.scss';
-import { useDispatch } from 'react-redux';
-import { useSelectorCustom } from '../../state/store';
-import { updateSearchTerm } from '../../state/searchTerm/searchTermSlice';
 import { useRouter } from 'next/router';
 
 export const TEST_ID = 'search-bar';
 
-function SearchBar() {
-  const searchTerm = useSelectorCustom('searchTerm');
+function SearchBar({ defaultValue }) {
   const inputElement = useRef<HTMLInputElement>(null);
-  const [inputValue, setInputValue] = useState(searchTerm);
-  const dispatch = useDispatch();
+  const [inputValue, setInputValue] = useState(defaultValue);
   const router = useRouter();
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -22,9 +17,16 @@ function SearchBar() {
     if (current) {
       const value = current.value.trim();
       setInputValue(value);
-      dispatch(updateSearchTerm(value));
 
-      if (searchTerm !== value) router.replace('/page/1');
+      const queryParams = { searchTerm: value };
+
+      router.push(
+        {
+          pathname: '/page/1',
+          query: { ...router.query, ...queryParams },
+        },
+        '/page/1'
+      );
     }
   };
 
