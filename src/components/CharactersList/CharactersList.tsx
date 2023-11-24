@@ -58,12 +58,12 @@ function CharactersList() {
     if (data === null) return <></>;
     if (!data.length) return <NotFoundCard />;
 
-    console.log(router.asPath);
     return data.map((character: CharacterData) => (
       <Link
         key={character.id}
         className={styles.card_link}
-        href={`${router.asPath}?characterID=${character.id}`}
+        href={`${router.pathname}?pageID=${pageID}&characterID=${character.id}`}
+        as={`/page/${pageID}/details/${character.id}`}
         scroll={false}
       >
         <CharacterCard {...character} />
