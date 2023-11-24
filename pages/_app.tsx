@@ -3,15 +3,20 @@ import { wrapper } from '../src/state/store';
 import '../src/styles/index.scss';
 import Layout from '../src/components/Layout/Layout';
 import ErrorBoundary from '../src/components/ErrorBoundary/ErrorBoundary';
+import { Provider } from 'react-redux';
 
-function App({ Component, pageProps }: AppProps) {
+function App({ Component, ...rest }: AppProps) {
+  const { store, props } = wrapper.useWrappedStore(rest);
+
   return (
-    <Layout>
-      <ErrorBoundary>
-        <Component {...pageProps} />
-      </ErrorBoundary>
-    </Layout>
+    <Provider store={store}>
+      <Layout>
+        <ErrorBoundary>
+          <Component {...props.pageProps} />
+        </ErrorBoundary>
+      </Layout>
+    </Provider>
   );
 }
 
-export default wrapper.withRedux(App);
+export default App;
