@@ -1,38 +1,60 @@
 import { rickMortyApi } from '../services/api/rickMortyApi';
 import { updateItemsPerPage } from '../state/itemsPerPage/itemsPerPageSlice';
-import { updateSearchTerm } from '../state/searchTerm/searchTermSlice';
+import {
+  SEARCH_TERM_NAME,
+  updateSearchTerm,
+} from '../state/searchTerm/searchTermSlice';
 import {
   VIEW_MODE_GRID,
   VIEW_MODE_LIST,
   setGrid,
   setList,
 } from '../state/viewMode/viewModeSlice';
+import Cookies from 'cookies';
 
 export const isString = (value: unknown): value is string =>
   typeof value === 'string';
 
 export const serverSidePropsCallback = (store) => async (context) => {
-  const getQueryContextValue = (name: string) =>
-    context.query[name] || context.params[name];
+  const getQueryValue = (name: string) => context.query[name];
 
   const getStateValue = (name: string) => {
     const state = store.getState();
     return state[name].value;
   };
 
+  const cookies = new Cookies(context.req, context.res);
+
   let characterData;
-  const characterID = getQueryContextValue('characterID');
-  const pageID = getQueryContextValue('pageID');
-  const searchTermQuery = getQueryContextValue('searchTerm');
-  const itemsPerPageQuery = getQueryContextValue('itemsPerPage');
-  const viewModeQuery = getQueryContextValue('viewMode');
+  const characterID = getQueryValue('characterID');
+  const pageID = getQueryValue('pageID');
 
-  if (searchTermQuery) store.dispatch(updateSearchTerm(searchTermQuery));
-  if (itemsPerPageQuery) store.dispatch(updateItemsPerPage(itemsPerPageQuery));
-  if (viewModeQuery === VIEW_MODE_GRID) store.dispatch(setGrid());
-  if (viewModeQuery === VIEW_MODE_LIST) store.dispatch(setList());
+  let searchTermQ = getQueryValue('searchTerm');
+  searchTermQ = isString(searchTermQ)
+    ? searchTermQ
+    : cookies.get(SEARCH_TERM_NAME);
+  const itemsPerPageQ =
+    getQueryValue('itemsPerPage') || cookies.get('itemsPerPage');
+  const viewModeQ = getQueryValue('viewMode') || cookies.get('viewMode');
 
-  const searchTerm = getStateValue('searchTerm');
+  if (searchTermQ) {
+    store.dispatch(updateSearchTerm(searchTermQ));
+    cookies.set(SEARCH_TERM_NAME, searchTermQ);
+  } else {
+    store.dispatch(updateSearchTerm(null));
+    cookies.set(SEARCH_TERM_NAME, null);
+  }
+  if (itemsPerPageQ) {
+    store.dispatch(updateItemsPerPage(itemsPerPageQ));
+    cookies.set('itemsPerPage', itemsPerPageQ);
+  }
+  if (viewModeQ) {
+    if (viewModeQ === VIEW_MODE_GRID) store.dispatch(setGrid());
+    if (viewModeQ === VIEW_MODE_LIST) store.dispatch(setList());
+    cookies.set('viewMode', viewModeQ);
+  }
+
+  const searchTerm = getStateValue('searchTerm') || '';
   const itemsPerPage = getStateValue('itemsPerPage');
   const viewMode = getStateValue('viewMode');
 

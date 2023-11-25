@@ -3,16 +3,16 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export const SEARCH_TERM_NAME = 'RMAppSearchTerm';
 
 interface SearchTermState {
-  value: string;
+  value: string | null;
 }
 
 export const searchTermSlice = createSlice({
   name: 'searchTerm',
   initialState: (): SearchTermState => {
-    let value = '';
+    let value = null;
 
     if (typeof window !== 'undefined')
-      value = localStorage.getItem(SEARCH_TERM_NAME) ?? '';
+      value = localStorage.getItem(SEARCH_TERM_NAME) ?? null;
 
     return { value };
   },
