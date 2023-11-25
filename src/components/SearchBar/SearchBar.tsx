@@ -18,15 +18,11 @@ function SearchBar({ defaultValue }) {
       const value = current.value.trim();
       setInputValue(value);
 
-      const queryParams = { searchTerm: value };
+      const pathname = '/page/1';
+      const queryParams = { searchTerm: value, pageID: 1 };
+      const query = { ...router.query, ...queryParams };
 
-      router.push(
-        {
-          pathname: '/page/1',
-          query: { ...router.query, ...queryParams },
-        },
-        '/page/1'
-      );
+      router.push({ pathname, query }, pathname);
     }
   };
 

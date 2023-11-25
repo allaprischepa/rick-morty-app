@@ -14,6 +14,13 @@ function Pager({ currentPage, pagesCount, pagerGap = 0 }: Props) {
 
   if (pagesCount <= 0) return <></>;
 
+  const goToPage = (pageNum: number) => {
+    const pathname = `/page/${pageNum}`;
+    const query = router.query;
+
+    router.push({ pathname, query }, pathname);
+  };
+
   const getLink = (
     pageNum: number,
     key: string,
@@ -30,15 +37,7 @@ function Pager({ currentPage, pagesCount, pagerGap = 0 }: Props) {
         className={className}
         key={key}
         title={`page ${pageNum}`}
-        onClick={() =>
-          router.push(
-            {
-              pathname: `/page/${pageNum}`,
-              query: { ...router.query },
-            },
-            `/page/${pageNum}`
-          )
-        }
+        onClick={() => goToPage(pageNum)}
       >
         {content}
       </button>

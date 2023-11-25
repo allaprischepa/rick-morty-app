@@ -12,16 +12,12 @@ function CharacterDetails({ data }) {
   const NOT_SPECIFIED = 'not specified';
 
   const closeDetails = () => {
-    delete router.query.characterID;
+    const pathname = `/page/${pageID}`;
+    const options = { scroll: false, shallow: true };
+    const query = router.query;
+    delete query.characterID;
 
-    router.push(
-      {
-        pathname: `/page/${pageID}`,
-        query: { ...router.query },
-      },
-      `/page/${pageID}`,
-      { scroll: false, shallow: true }
-    );
+    router.push({ pathname: `/page/${pageID}`, query }, pathname, options);
   };
 
   return (

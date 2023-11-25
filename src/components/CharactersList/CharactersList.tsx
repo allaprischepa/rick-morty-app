@@ -18,6 +18,14 @@ function CharactersList({ props }) {
   const pagesCount = listData.pages;
   const charactersData = listData.results;
 
+  const openDetails = (id: number) => {
+    const pathname = `/page/${pageID}/details/${id}`;
+    const queryParams = { characterID: id };
+    const query = { ...router.query, ...queryParams };
+
+    router.push({ pathname, query }, pathname, { scroll: false });
+  };
+
   const showData = (data: DataType): JSX.Element | JSX.Element[] => {
     if (data === null) return <></>;
     if (!data.length) return <NotFoundCard />;
@@ -26,18 +34,7 @@ function CharactersList({ props }) {
       <div
         key={character.id}
         className={styles.card_link}
-        onClick={() => {
-          const queryParams = { pageID, characterID: character.id };
-
-          router.push(
-            {
-              pathname: `${router.pathname}`,
-              query: { ...router.query, ...queryParams },
-            },
-            `/page/${pageID}/details/${character.id}`,
-            { scroll: false }
-          );
-        }}
+        onClick={() => openDetails(character.id)}
       >
         <CharacterCard viewMode={viewMode} {...character} />
       </div>

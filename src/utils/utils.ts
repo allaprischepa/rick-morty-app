@@ -1,22 +1,40 @@
 import { rickMortyApi } from '../services/api/rickMortyApi';
+import { updateItemsPerPage } from '../state/itemsPerPage/itemsPerPageSlice';
+import { updateSearchTerm } from '../state/searchTerm/searchTermSlice';
+import {
+  VIEW_MODE_GRID,
+  VIEW_MODE_LIST,
+  setGrid,
+  setList,
+} from '../state/viewMode/viewModeSlice';
 
 export const isString = (value: unknown): value is string =>
   typeof value === 'string';
 
 export const serverSidePropsCallback = (store) => async (context) => {
-  const getValue = (name: string) => {
-    const state = store.getState();
-    const value =
-      context.query[name] || context.params[name] || state[name].value;
+  const getQueryContextValue = (name: string) =>
+    context.query[name] || context.params[name];
 
-    return value;
+  const getStateValue = (name: string) => {
+    const state = store.getState();
+    return state[name].value;
   };
 
-  const characterID = context.params?.characterID || context.query.characterID;
-  const pageID = context.params?.pageID || context.query.pageID;
-  const searchTerm = getValue('searchTerm');
-  const itemsPerPage = getValue('itemsPerPage');
-  const viewMode = getValue('viewMode');
+  let characterData;
+  const characterID = getQueryContextValue('characterID');
+  const pageID = getQueryContextValue('pageID');
+  const searchTermQuery = getQueryContextValue('searchTerm');
+  const itemsPerPageQuery = getQueryContextValue('itemsPerPage');
+  const viewModeQuery = getQueryContextValue('viewMode');
+
+  if (searchTermQuery) store.dispatch(updateSearchTerm(searchTermQuery));
+  if (itemsPerPageQuery) store.dispatch(updateItemsPerPage(itemsPerPageQuery));
+  if (viewModeQuery === VIEW_MODE_GRID) store.dispatch(setGrid());
+  if (viewModeQuery === VIEW_MODE_LIST) store.dispatch(setList());
+
+  const searchTerm = getStateValue('searchTerm');
+  const itemsPerPage = getStateValue('itemsPerPage');
+  const viewMode = getStateValue('viewMode');
 
   const listData = await store.dispatch(
     rickMortyApi.endpoints.getData.initiate({
@@ -26,9 +44,11 @@ export const serverSidePropsCallback = (store) => async (context) => {
     })
   );
 
-  const characterData = await store.dispatch(
-    rickMortyApi.endpoints.getCharacterData.initiate(characterID)
-  );
+  if (characterID) {
+    characterData = await store.dispatch(
+      rickMortyApi.endpoints.getCharacterData.initiate(characterID)
+    );
+  }
 
   await Promise.all(store.dispatch(rickMortyApi.util.getRunningQueriesThunk()));
 
@@ -37,8 +57,8 @@ export const serverSidePropsCallback = (store) => async (context) => {
       searchTerm,
       itemsPerPage,
       viewMode,
-      listData: listData.data,
-      characterData: characterData.data,
+      listData: listData?.data ?? null,
+      characterData: characterData?.data ?? null,
     },
   };
 };

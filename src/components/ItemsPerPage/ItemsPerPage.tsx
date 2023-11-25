@@ -24,15 +24,12 @@ function ItemsPerPage({ defaultValue, optionsCount = 3 }: Props) {
 
   const handleChangeEvent = (event: ChangeEvent<HTMLSelectElement>) => {
     const value = +event.target.value;
-    const queryParams = { itemsPerPage: value };
 
-    router.push(
-      {
-        pathname: '/page/1',
-        query: { ...router.query, ...queryParams },
-      },
-      '/page/1'
-    );
+    const pathname = '/page/1';
+    const queryParams = { itemsPerPage: value, pageID: 1 };
+    const query = { ...router.query, ...queryParams };
+
+    router.push({ pathname, query }, pathname);
   };
 
   return (

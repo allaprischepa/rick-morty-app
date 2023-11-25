@@ -9,15 +9,11 @@ function ViewMode({ viewMode }) {
   const router = useRouter();
 
   const setViewMode = (mode: string) => {
+    const pathname = router.asPath;
     const queryParams = { viewMode: mode };
+    const query = { ...router.query, ...queryParams };
 
-    router.push(
-      {
-        pathname: router.pathname,
-        query: { ...router.query, ...queryParams },
-      },
-      router.asPath
-    );
+    router.push({ pathname, query }, pathname);
   };
 
   return (
