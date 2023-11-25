@@ -9,6 +9,7 @@ import {
 } from '../src/services/api/__mocks__/handler';
 import { server } from '../src/services/api/__mocks__/server';
 import MainPage, { getServerSideProps } from '../pages/page/[pageID]';
+import { rickMortyApi } from '../src/services/api/rickMortyApi';
 
 describe('Card List Component', () => {
   it('renders the specified number of cards', async () => {
@@ -35,11 +36,16 @@ describe('Card List Component', () => {
 });
 
 describe('Appropriate message', () => {
-  it.skip('is displayed if no cards are present', async () => {
-    const characters = getRandomCharactersArray();
-    server.use(...getHandlersByMockedArray(characters));
+  it('is displayed if no cards are present', async () => {
+    server.use(...getHandlersByMockedArray([]));
 
-    const res = await getServerSideProps(gsspCtx());
+    const res = await getServerSideProps(
+      gsspCtx({
+        query: {
+          searchTerm: 'some not existed value',
+        },
+      })
+    );
 
     render(<MainPage {...res.props} />);
 
