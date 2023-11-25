@@ -9,7 +9,6 @@ import {
 } from '../src/services/api/__mocks__/handler';
 import { server } from '../src/services/api/__mocks__/server';
 import MainPage, { getServerSideProps } from '../pages/page/[pageID]';
-import { rickMortyApi } from '../src/services/api/rickMortyApi';
 
 describe('Card List Component', () => {
   it('renders the specified number of cards', async () => {
