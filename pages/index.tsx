@@ -1,21 +1,4 @@
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-
-function HomePage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    router.push(
-      {
-        pathname: `/page/1`,
-        query: { ...router.query },
-      },
-      `/page/1`
-    );
-  });
-
-  return null;
-}
+const HomePage = () => null;
 
 export function getServerSideProps({ res }) {
   res.writeHead(301, { Location: '/page/1' });
