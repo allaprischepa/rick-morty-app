@@ -1,4 +1,4 @@
-import { http, HttpResponse } from 'msw';
+import { http, HttpHandler, HttpResponse } from 'msw';
 import { API_ITEMS_PER_PAGE, API_URL } from '../settings';
 import { CharacterData } from '../../../types/types';
 
@@ -35,7 +35,9 @@ export const getRandomCharactersArray = () => {
   );
 };
 
-export const getHandlersByMockedArray = (arr: CharacterData[]) => {
+export const getHandlersByMockedArray = (
+  arr: CharacterData[]
+): HttpHandler[] => {
   return [
     http.get(`${API_URL}`, ({ request }) => {
       const url = new URL(request.url);

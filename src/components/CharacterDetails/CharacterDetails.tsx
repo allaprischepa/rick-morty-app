@@ -70,7 +70,12 @@ function CharacterDetails({ data }) {
           ) : (
             <>
               <div className={styles.character_image}>
-                <Image src={notFoundImage} alt="Not found character" />
+                <Image
+                  src={notFoundImage}
+                  alt="Not found character"
+                  width={250}
+                  height={250}
+                />
               </div>
               <div className={styles.character_description}>
                 The character is not found...

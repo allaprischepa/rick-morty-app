@@ -1,27 +1,29 @@
 import { describe, it, expect } from 'vitest';
-import { waitFor, screen } from '@testing-library/react';
+import { waitFor, screen, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { TEST_ID as CHRCTRS_LIST_TEST_ID } from '../src/components/CharactersList/CharactersList';
-import { renderWithProviders } from './utils/utils';
+import { gsspCtx } from './utils/utils';
 import {
   getHandlersByMockedArray,
   getRandomCharactersArray,
 } from '../src/services/api/__mocks__/handler';
 import { server } from '../src/services/api/__mocks__/server';
-import { setupStore } from '../src/state/store';
+import MainPage, { getServerSideProps } from '../pages/page/[pageID]';
 
 describe('Card List Component', () => {
-  it.skip('renders the specified number of cards', async () => {
+  it('renders the specified number of cards', async () => {
     const characters = getRandomCharactersArray();
     server.use(...getHandlersByMockedArray(characters));
 
-    const store = setupStore({
-      itemsPerPage: {
-        value: 10000,
-      },
-    });
+    const res = await getServerSideProps(
+      gsspCtx({
+        query: {
+          itemsPerPage: '1000',
+        },
+      })
+    );
 
-    renderWithProviders(<App />, { store });
+    render(<MainPage {...res.props} />);
 
     await waitFor(() => {
       const characterCards = screen.getByTestId(CHRCTRS_LIST_TEST_ID).children;
@@ -34,9 +36,12 @@ describe('Card List Component', () => {
 
 describe('Appropriate message', () => {
   it.skip('is displayed if no cards are present', async () => {
-    server.use(...getHandlersByMockedArray([]));
+    const characters = getRandomCharactersArray();
+    server.use(...getHandlersByMockedArray(characters));
 
-    renderWithProviders(<App />);
+    const res = await getServerSideProps(gsspCtx());
+
+    render(<MainPage {...res.props} />);
 
     await waitFor(() => {
       const characterCards = screen.getByTestId(CHRCTRS_LIST_TEST_ID).children;

@@ -4,7 +4,6 @@ import '@testing-library/jest-dom';
 import { TEST_ID as SEARCH_BAR_TEST_ID } from '../src/components/SearchBar/SearchBar';
 import userEvent from '@testing-library/user-event';
 import { SEARCH_TERM_NAME } from '../src/state/searchTerm/searchTermSlice';
-import { renderWithProviders } from './utils/utils';
 
 afterEach(() => {
   localStorage.clear();

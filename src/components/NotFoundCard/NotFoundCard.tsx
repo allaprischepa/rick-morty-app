@@ -7,7 +7,7 @@ function NotFoundCard() {
   return (
     <div className={`${cardStyles.character_card} ${styles.not_found_card}`}>
       <div className={cardStyles.character_image}>
-        <Image src={image} alt="Not found character" />
+        <Image src={image} alt="Not found character" width={250} height={250} />
         <span className={styles.not_found_stamp}>Not found</span>
       </div>
       <div className={cardStyles.character_name}>unknown</div>

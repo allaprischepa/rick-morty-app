@@ -5,7 +5,13 @@ import Image from 'next/image';
 function Logo() {
   return (
     <div className={styles.logo}>
-      <Image src={logo} alt="Rick and Morty Logo" priority />
+      <Image
+        src={logo}
+        alt="Rick and Morty Logo"
+        width={250}
+        height={75}
+        priority
+      />
     </div>
   );
 }
