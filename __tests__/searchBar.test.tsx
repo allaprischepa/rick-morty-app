@@ -1,8 +1,6 @@
 import { describe, it, vi, expect, afterEach } from 'vitest';
-import { getByRole, render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { TEST_ID as SEARCH_BAR_TEST_ID } from '../src/components/SearchBar/SearchBar';
-import userEvent from '@testing-library/user-event';
 import { SEARCH_TERM_NAME } from '../src/state/searchTerm/searchTermSlice';
 import MainPage, { getServerSideProps } from '../pages/page/[pageID]';
 import { gsspCtx } from './utils/utils';
