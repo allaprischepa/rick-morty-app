@@ -1,51 +1,55 @@
 import { describe, it, vi, expect, afterEach } from 'vitest';
-import { getByRole, screen } from '@testing-library/react';
+import { getByRole, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { TEST_ID as SEARCH_BAR_TEST_ID } from '../src/components/SearchBar/SearchBar';
 import userEvent from '@testing-library/user-event';
 import { SEARCH_TERM_NAME } from '../src/state/searchTerm/searchTermSlice';
+import MainPage, { getServerSideProps } from '../pages/page/[pageID]';
+import { gsspCtx } from './utils/utils';
+import Cookies from 'cookies';
 
 afterEach(() => {
   localStorage.clear();
 });
 
 describe('Search button', () => {
-  it.skip('saves the entered value to the local storage', async () => {
+  it('saves the entered value to the cookie', async () => {
     const textToType = 'Nunc nulla';
-    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+    const setSpyOn = vi.spyOn(Cookies.prototype, 'set');
 
-    renderWithProviders(<App />);
+    const { props } = await getServerSideProps(
+      gsspCtx({
+        query: {
+          searchTerm: textToType,
+        },
+      })
+    );
 
-    const searchForm = screen.getByTestId(SEARCH_BAR_TEST_ID);
+    render(<MainPage {...props} />);
 
-    const searchInput = getByRole(searchForm, 'textbox');
-    await userEvent.type(searchInput, textToType);
-
-    const searchButton = getByRole(searchForm, 'button');
-
-    await userEvent.click(searchButton);
-
-    expect(setItemSpy).toHaveBeenCalledWith(SEARCH_TERM_NAME, textToType);
-
-    setItemSpy.mockRestore();
+    expect(setSpyOn).toHaveBeenCalledWith(SEARCH_TERM_NAME, textToType);
   });
 });
 
 describe('Search Сomponent', () => {
-  it.skip('retrieves the value from the local storage upon mounting', () => {
+  it('retrieves the value from the cookie', async () => {
     const text = 'Vivamus elementum';
 
-    localStorage.setItem(SEARCH_TERM_NAME, text);
+    const getSpyOn = vi.spyOn(Cookies.prototype, 'get');
+    getSpyOn.mockReturnValue(text);
 
-    const getItemSpy = vi.spyOn(Storage.prototype, 'getItem');
+    const { props } = await getServerSideProps(
+      gsspCtx({
+        query: {
+          searchTerm: null,
+        },
+      })
+    );
 
-    renderWithProviders(<App />);
+    render(<MainPage {...props} />);
 
-    expect(getItemSpy).toBeCalledWith(SEARCH_TERM_NAME);
+    expect(getSpyOn).toHaveBeenCalledWith(SEARCH_TERM_NAME);
 
-    const searchForm = screen.getByTestId(SEARCH_BAR_TEST_ID);
-    const searchInput: HTMLInputElement = getByRole(searchForm, 'textbox');
-
-    expect(searchInput.value).toEqual(text);
+    expect(props.searchTerm).toEqual(text);
   });
 });
