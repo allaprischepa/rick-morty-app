@@ -49,4 +49,4 @@ export function useSelectorCustom<K extends Keys>(
   return useSelector((state: RootState) => state[key]['value']);
 }
 
-export const wrapper = createWrapper<AppStore>(setupStore);
+export const wrapper = createWrapper<AppStore>(() => setupStore());
