@@ -1,6 +1,6 @@
 @import '../../styles/abstract/variables';
 
-.character-card {
+.character_card {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -18,11 +18,11 @@
     }
   }
 
-  .character-image img {
+  .character_image img {
     width: 100%;
   }
 
-  .character-properties {
+  .character_properties {
     width: 100%;
 
     td:first-child {
@@ -37,31 +37,31 @@
     }
   }
 
-  .character-name {
+  .character_name {
     font-size: 1.3em;
     font-weight: bold;
     text-align: center;
   }
 
-  &.view-mode_list {
+  &.view_mode__list {
     padding: 10px;
     width: 100%;
     flex-direction: row;
     column-gap: 2vw;
     align-items: center;
 
-    .character-image {
+    .character_image {
       height: 30vw;
       width: 30vw;
       max-width: 170px;
       max-height: 170px;
     }
 
-    .character-name {
+    .character_name {
       text-align: left;
     }
 
-    .character-properties {
+    .character_properties {
       width: fit-content;
 
       td:first-child {
@@ -74,7 +74,7 @@
     }
 
     @media screen and (max-width: 500px) {
-      .character-properties {
+      .character_properties {
         tr {
           display: flex;
           flex-direction: column;

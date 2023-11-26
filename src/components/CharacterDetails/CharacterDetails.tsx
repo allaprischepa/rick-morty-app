@@ -1,56 +1,43 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import Loader from '../Loader/Loader';
 import notFoundImage from '../../assets/images/empty-avatar.jpeg';
-import './CharacterDetails.scss';
-import { useGetCharacterDataQuery } from '../../services/api/rickMortyApi';
-import { useDispatch } from 'react-redux';
-import {
-  turnOff,
-  turnOn,
-} from '../../state/loadingDetails/loadingDetailsSlice';
-import { useSelectorCustom } from '../../state/store';
-import { useEffect } from 'react';
+import styles from './CharacterDetails.module.scss';
+import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 export const TEST_ID = 'character-details';
 export const CLOSE_BTN_TEST_ID = 'close-btn';
 
-function CharacterDetails() {
-  const { characterID: id = '' } = useParams();
+function CharacterDetails({ data }) {
+  const router = useRouter();
+  const { pageID } = router.query;
   const NOT_SPECIFIED = 'not specified';
-  const loadingDetails = useSelectorCustom('loadingDetails');
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
-  const { data, isFetching } = useGetCharacterDataQuery(id);
+  const closeDetails = () => {
+    const pathname = `/page/${pageID}`;
+    const options = { scroll: false, shallow: true };
+    const query = router.query;
+    delete query.characterID;
 
-  const closeDetails = () => navigate('..');
-
-  useEffect(() => {
-    isFetching && !loadingDetails
-      ? dispatch(turnOn())
-      : setTimeout(() => dispatch(turnOff()), 250);
-  }, [isFetching, loadingDetails, dispatch]);
-
-  if (loadingDetails) return <Loader />;
+    router.push({ pathname: `/page/${pageID}`, query }, pathname, options);
+  };
 
   return (
-    <div className="character-details-container" data-testid={TEST_ID}>
-      <div className="overlay" onClick={closeDetails}></div>
-      <div className="details-container">
+    <div className={styles.character_details_container} data-testid={TEST_ID}>
+      <div className={styles.overlay} onClick={closeDetails}></div>
+      <div className={styles.details_container}>
         <button
-          className="close-button"
+          className={styles.close_button}
           onClick={closeDetails}
           data-testid={CLOSE_BTN_TEST_ID}
         />
-        <div className="character-details">
+        <div className={styles.character_details}>
           {data ? (
             <>
-              <div className="character-name">{data.name}</div>
-              <div className="character-image">
+              <div className={styles.character_name}>{data.name}</div>
+              <div className={styles.character_image}>
                 <img src={data.image} />
               </div>
-              <div className="character-description">
-                <table className="character-properties">
+              <div className={styles.character_description}>
+                <table className={styles.character_properties}>
                   <tbody>
                     <tr>
                       <td>Status:</td>
@@ -82,10 +69,15 @@ function CharacterDetails() {
             </>
           ) : (
             <>
-              <div className="character-image">
-                <img src={notFoundImage} />
+              <div className={styles.character_image}>
+                <Image
+                  src={notFoundImage}
+                  alt="Not found character"
+                  width={250}
+                  height={250}
+                />
               </div>
-              <div className="character-description">
+              <div className={styles.character_description}>
                 The character is not found...
               </div>
             </>

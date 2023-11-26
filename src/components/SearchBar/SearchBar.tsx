@@ -1,18 +1,13 @@
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
-import './SearchBar.scss';
-import { useDispatch } from 'react-redux';
-import { useSelectorCustom } from '../../state/store';
-import { updateSearchTerm } from '../../state/searchTerm/searchTermSlice';
-import { useNavigate } from 'react-router-dom';
+import s from './SearchBar.module.scss';
+import { useRouter } from 'next/router';
 
 export const TEST_ID = 'search-bar';
 
-function SearchBar() {
-  const searchTerm = useSelectorCustom('searchTerm');
+function SearchBar({ defaultValue }) {
   const inputElement = useRef<HTMLInputElement>(null);
-  const [inputValue, setInputValue] = useState(searchTerm);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [inputValue, setInputValue] = useState(defaultValue);
+  const router = useRouter();
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -22,9 +17,12 @@ function SearchBar() {
     if (current) {
       const value = current.value.trim();
       setInputValue(value);
-      dispatch(updateSearchTerm(value));
 
-      if (searchTerm !== value) navigate('/page/1', { replace: true });
+      const pathname = '/page/1';
+      const queryParams = { searchTerm: value, pageID: 1 };
+      const query = { ...router.query, ...queryParams };
+
+      router.push({ pathname, query }, pathname);
     }
   };
 
@@ -33,16 +31,20 @@ function SearchBar() {
   };
 
   return (
-    <form className="search-bar" onSubmit={handleSubmit} data-testid={TEST_ID}>
+    <form
+      className={s['search-bar']}
+      onSubmit={handleSubmit}
+      data-testid={TEST_ID}
+    >
       <input
         type="text"
         ref={inputElement}
         value={inputValue}
         placeholder="Type the name..."
-        className="search-input"
+        className={s['search-input']}
         onChange={handleChange}
       />
-      <button type="submit" title="Search" className="search-button" />
+      <button type="submit" title="Search" className={s['search-button']} />
     </form>
   );
 }

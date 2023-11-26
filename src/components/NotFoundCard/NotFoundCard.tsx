@@ -1,16 +1,19 @@
+import Image from 'next/image';
 import image from '../../assets/images/empty-avatar.jpeg';
-import '../CharacterCard/CharacterCard.scss';
-import './NotFoundCard.scss';
+import cardStyles from '../CharacterCard/CharacterCard.module.scss';
+import styles from './NotFoundCard.module.scss';
 
 function NotFoundCard() {
   return (
-    <div className="character-card not-found-card">
-      <div className="character-image">
-        <img src={image} />
-        <span className="not-found-stamp">Not found</span>
+    <div className={`${cardStyles.character_card} ${styles.not_found_card}`}>
+      <div className={cardStyles.character_image}>
+        <Image src={image} alt="Not found character" width={250} height={250} />
+        <span className={styles.not_found_stamp}>Not found</span>
       </div>
-      <div className="character-name">unknown</div>
-      <div className="not-found-description">There is no such character...</div>
+      <div className={cardStyles.character_name}>unknown</div>
+      <div className={styles.not_found_description}>
+        There is no such character...
+      </div>
     </div>
   );
 }

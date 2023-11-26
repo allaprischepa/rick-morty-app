@@ -3,18 +3,24 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export const SEARCH_TERM_NAME = 'RMAppSearchTerm';
 
 interface SearchTermState {
-  value: string;
+  value: string | null;
 }
 
 export const searchTermSlice = createSlice({
   name: 'searchTerm',
-  initialState: (): SearchTermState => ({
-    value: localStorage.getItem(SEARCH_TERM_NAME) || '',
-  }),
+  initialState: (): SearchTermState => {
+    let value = null;
+
+    if (typeof window !== 'undefined')
+      value = localStorage.getItem(SEARCH_TERM_NAME) ?? null;
+
+    return { value };
+  },
   reducers: {
     updateSearchTerm: (state, action: PayloadAction<string>) => {
       state.value = action.payload;
-      localStorage.setItem(SEARCH_TERM_NAME, action.payload);
+      if (typeof window !== 'undefined')
+        localStorage.setItem(SEARCH_TERM_NAME, action.payload);
     },
   },
 });

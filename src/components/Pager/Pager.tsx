@@ -1,5 +1,5 @@
-import './Pager.scss';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
+import styles from './Pager.module.scss';
 
 export const TEST_ID = 'pager';
 
@@ -10,9 +10,16 @@ interface Props {
 }
 
 function Pager({ currentPage, pagesCount, pagerGap = 0 }: Props) {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   if (pagesCount <= 0) return <></>;
+
+  const goToPage = (pageNum: number) => {
+    const pathname = `/page/${pageNum}`;
+    const query = router.query;
+
+    router.push({ pathname, query }, pathname);
+  };
 
   const getLink = (
     pageNum: number,
@@ -20,14 +27,17 @@ function Pager({ currentPage, pagesCount, pagerGap = 0 }: Props) {
     className?: string,
     content?: string
   ): JSX.Element => {
-    if (pageNum === currentPage) className = `${className} active`;
+    className =
+      pageNum === currentPage
+        ? `${styles[className]} ${styles.active}`
+        : styles[className];
 
     return (
       <button
         className={className}
         key={key}
         title={`page ${pageNum}`}
-        onClick={() => navigate(`/page/${pageNum}`)}
+        onClick={() => goToPage(pageNum)}
       >
         {content}
       </button>
@@ -80,7 +90,7 @@ function Pager({ currentPage, pagesCount, pagerGap = 0 }: Props) {
   pagerContent.push(lastPage);
 
   return pagerContent ? (
-    <div className="pager" data-testid={TEST_ID}>
+    <div className={styles.pager} data-testid={TEST_ID}>
       {pagerContent}
     </div>
   ) : null;

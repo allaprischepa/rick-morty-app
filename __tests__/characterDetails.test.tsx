@@ -1,18 +1,19 @@
-import { describe, it, expect } from 'vitest';
-import { screen, getByText, getByTestId } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { screen, getByText, getByTestId, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import App from '../src/components/App/App';
 import { CharacterData } from '../src/types/types';
-import { TEST_ID as CHRCTR_CARD_TEST_ID } from '../src/components/CharacterCard/CharacterCard';
 import {
   TEST_ID as CHRCTR_DTLS_TEST_ID,
   CLOSE_BTN_TEST_ID,
 } from '../src/components/CharacterDetails/CharacterDetails';
-import { TEST_ID as LOADER_TEST_ID } from '../src/components/Loader/Loader';
-import { renderWithProviders } from './utils/utils';
+import { gsspCtx } from './utils/utils';
 import { getHandlersByMockedArray } from '../src/services/api/__mocks__/handler';
 import { server } from '../src/services/api/__mocks__/server';
+import DetailsPage, {
+  getServerSideProps,
+} from '../pages/page/[pageID]/details/[characterID]';
+import { useRouter } from 'next/router';
 
 const character: CharacterData = {
   id: 8,
@@ -32,33 +33,32 @@ const character: CharacterData = {
   image: 'In',
 };
 
-describe('Loading Indicator', () => {
-  it('is displayed while fetching the Details data', async () => {
-    server.use(...getHandlersByMockedArray([character]));
-
-    renderWithProviders(<App />);
-
-    const card = await screen.findByTestId(CHRCTR_CARD_TEST_ID);
-    expect(card).toBeInTheDocument();
-
-    await userEvent.click(card);
-
-    const loader = await screen.findByTestId(LOADER_TEST_ID);
-    expect(loader).toBeInTheDocument();
-  });
-});
+vi.mock('next/router', () => ({
+  useRouter: vi.fn().mockReturnValue({
+    query: {
+      pageID: 1,
+      characterID: 8,
+    },
+    pathname: `/page/1/details/8`,
+    push: vi.fn(),
+  }),
+}));
 
 describe('Detailed Card Component', () => {
   it('correctly displays the detailed card data', async () => {
     server.use(...getHandlersByMockedArray([character]));
-    renderWithProviders(<App />);
 
-    const card = await screen.findByTestId(CHRCTR_CARD_TEST_ID);
-    expect(card).toBeInTheDocument();
+    const res = await getServerSideProps(
+      gsspCtx({
+        query: {
+          characterID: `${character.id}`,
+        },
+      })
+    );
 
-    await userEvent.click(card);
+    render(<DetailsPage {...res.props} />);
 
-    const details = await screen.findByTestId(CHRCTR_DTLS_TEST_ID);
+    const details = screen.getByTestId(CHRCTR_DTLS_TEST_ID);
     expect(details).toBeInTheDocument();
 
     expect(getByText(details, character.name)).toBeInTheDocument();
@@ -75,14 +75,19 @@ describe('Clicking On The Close Button', () => {
   it('hides the Details component', async () => {
     server.use(...getHandlersByMockedArray([character]));
 
-    renderWithProviders(<App />);
+    const res = await getServerSideProps(
+      gsspCtx({
+        query: {
+          characterID: `${character.id}`,
+        },
+      })
+    );
 
-    const card = await screen.findByTestId(CHRCTR_CARD_TEST_ID);
-    expect(card).toBeInTheDocument();
+    render(<DetailsPage {...res.props} />);
 
-    await userEvent.click(card);
+    const { push } = useRouter();
 
-    const details = await screen.findByTestId(CHRCTR_DTLS_TEST_ID);
+    const details = screen.getByTestId(CHRCTR_DTLS_TEST_ID);
     expect(details).toBeInTheDocument();
 
     const closeBtn = getByTestId(details, CLOSE_BTN_TEST_ID);
@@ -90,6 +95,10 @@ describe('Clicking On The Close Button', () => {
 
     await userEvent.click(closeBtn);
 
-    expect(screen.queryByTestId(CHRCTR_DTLS_TEST_ID)).toBeNull();
+    expect(push).toHaveBeenCalledWith(
+      expect.objectContaining({ pathname: '/page/1' }),
+      '/page/1',
+      expect.objectContaining({ scroll: false, shallow: true })
+    );
   });
 });

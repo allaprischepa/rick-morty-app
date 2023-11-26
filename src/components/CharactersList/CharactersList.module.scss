@@ -1,19 +1,19 @@
 @import '../../styles/abstract/variables';
 
-.characters-list {
+.characters_list {
   display: flex;
   flex-wrap: wrap;
   gap: 30px;
   justify-content: center;
   margin: 15px auto;
 
-  .card-link {
+  .card_link {
     color: inherit;
     text-decoration: inherit;
   }
 
-  &.view-mode_list {
-    .card-link {
+  &.view_mode__list {
+    .card_link {
       width: 100%;
     }
   }
@@ -28,7 +28,7 @@
   justify-content: space-around;
 }
 
-.no-character {
+.no_character {
   font-size: 3em;
   font-weight: 600;
   color: $main-color;

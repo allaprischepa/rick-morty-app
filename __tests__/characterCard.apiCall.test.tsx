@@ -1,15 +1,15 @@
 import { describe, it, vi, expect } from 'vitest';
-import { screen } from '@testing-library/react';
-import App from '../src/components/App/App';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { CharacterData } from '../src/types/types';
-import { TEST_ID as CHRCTR_CARD_TEST_ID } from '../src/components/CharacterCard/CharacterCard';
-import userEvent from '@testing-library/user-event';
 import { TEST_ID as CHRCTR_DTLS_TEST_ID } from '../src/components/CharacterDetails/CharacterDetails';
 import { API_URL } from '../src/services/api/settings';
-import { renderWithProviders } from './utils/utils';
+import { gsspCtx } from './utils/utils';
 import { server } from '../src/services/api/__mocks__/server';
 import { getHandlersByMockedArray } from '../src/services/api/__mocks__/handler';
+import DetailsPage, {
+  getServerSideProps,
+} from '../pages/page/[pageID]/details/[characterID]';
 
 const character: CharacterData = {
   id: 6,
@@ -29,19 +29,33 @@ const character: CharacterData = {
   image: 'Vestibulum',
 };
 
-describe('Click On A Card', () => {
+vi.mock('next/router', () => ({
+  useRouter: vi.fn().mockReturnValue({
+    query: {
+      pageID: 1,
+      characterID: 8,
+    },
+    pathname: `/page/1/details/8`,
+    push: vi.fn(),
+  }),
+}));
+
+describe('Opening Details', () => {
   it('triggers an additional API call to fetch detailed information.', async () => {
     const requestSpy = vi.fn();
     server.events.on('request:start', requestSpy);
 
     server.use(...getHandlersByMockedArray([character]));
 
-    renderWithProviders(<App />);
+    const res = await getServerSideProps(
+      gsspCtx({
+        query: {
+          characterID: `${character.id}`,
+        },
+      })
+    );
 
-    const card = await screen.findByTestId(CHRCTR_CARD_TEST_ID);
-    expect(card).toBeInTheDocument();
-
-    await userEvent.click(card);
+    render(<DetailsPage {...res.props} />);
 
     expect(requestSpy).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -51,7 +65,7 @@ describe('Click On A Card', () => {
       })
     );
 
-    const details = await screen.findByTestId(CHRCTR_DTLS_TEST_ID);
+    const details = screen.getByTestId(CHRCTR_DTLS_TEST_ID);
     expect(details).toBeInTheDocument();
   });
 });

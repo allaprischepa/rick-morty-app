@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_ITEMS_PER_PAGE, API_URL } from './settings';
 import { APIResponse, CharacterData, Response } from '../../types/types';
+import { HYDRATE } from 'next-redux-wrapper';
 
 interface QueryArgs {
   searchTerm?: string;
@@ -11,6 +12,11 @@ interface QueryArgs {
 export const rickMortyApi = createApi({
   reducerPath: 'rickMortyApi',
   baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
+  extractRehydrationInfo(action, { reducerPath }) {
+    if (action.type === HYDRATE) {
+      return action.payload[reducerPath];
+    }
+  },
   endpoints: (builder) => ({
     getDataByPage: builder.query<APIResponse, QueryArgs>({
       query: ({ searchTerm = '', page = 1 }) =>

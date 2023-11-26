@@ -1,26 +1,32 @@
-import { useDispatch } from 'react-redux';
-import { useSelectorCustom } from '../../state/store';
 import {
   VIEW_MODE_GRID,
   VIEW_MODE_LIST,
-  setGrid,
-  setList,
 } from '../../state/viewMode/viewModeSlice';
-import './ViewMode.scss';
+import styles from './ViewMode.module.scss';
+import { useRouter } from 'next/router';
 
-function ViewMode() {
-  const viewMode = useSelectorCustom('viewMode');
-  const dispatch = useDispatch();
+function ViewMode({ viewMode }) {
+  const router = useRouter();
+
+  const setViewMode = (mode: string) => {
+    const pathname = router.asPath;
+    const queryParams = { viewMode: mode };
+    const query = { ...router.query, ...queryParams };
+
+    router.push({ pathname, query }, pathname);
+  };
 
   return (
-    <div className={`view-mode ${viewMode}`}>
+    <div className={`${styles.view_mode} ${styles[viewMode]}`}>
       <button
-        className={`list ${viewMode === VIEW_MODE_LIST ? 'active' : ''}`}
-        onClick={() => dispatch(setList())}
+        className={`${styles.list}
+        ${viewMode === VIEW_MODE_LIST ? styles.active : ''}`}
+        onClick={() => setViewMode(VIEW_MODE_LIST)}
       />
       <button
-        className={`grid ${viewMode === VIEW_MODE_GRID ? 'active' : ''}`}
-        onClick={() => dispatch(setGrid())}
+        className={`${styles.grid}
+        ${viewMode === VIEW_MODE_GRID ? styles.active : ''}`}
+        onClick={() => setViewMode(VIEW_MODE_GRID)}
       />
     </div>
   );

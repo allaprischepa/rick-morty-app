@@ -1,14 +1,14 @@
-import { describe, it, expect } from 'vitest';
-import { screen, getByText } from '@testing-library/react';
-import App from '../src/components/App/App';
+import { describe, it, expect, vi } from 'vitest';
+import { screen, getByText, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { CharacterData } from '../src/types/types';
 import { TEST_ID as CHRCTR_CARD_TEST_ID } from '../src/components/CharacterCard/CharacterCard';
 import userEvent from '@testing-library/user-event';
-import { TEST_ID as CHRCTR_DTLS_TEST_ID } from '../src/components/CharacterDetails/CharacterDetails';
-import { renderWithProviders } from './utils/utils';
 import { getHandlersByMockedArray } from '../src/services/api/__mocks__/handler';
 import { server } from '../src/services/api/__mocks__/server';
+import MainPage, { getServerSideProps } from '../pages/page/[pageID]';
+import { gsspCtx } from './utils/utils';
+import { useRouter } from 'next/router';
 
 const character: CharacterData = {
   id: 6,
@@ -28,13 +28,25 @@ const character: CharacterData = {
   image: 'Vestibulum',
 };
 
+vi.mock('next/router', () => ({
+  useRouter: vi.fn().mockReturnValue({
+    query: {
+      pageID: 1,
+    },
+    pathname: `/page/1`,
+    push: vi.fn(),
+  }),
+}));
+
 describe('Card Component', () => {
   it('renders the relevant card data', async () => {
     server.use(...getHandlersByMockedArray([character]));
 
-    renderWithProviders(<App />);
+    const res = await getServerSideProps(gsspCtx());
 
-    const card = await screen.findByTestId(CHRCTR_CARD_TEST_ID);
+    render(<MainPage {...res.props} />);
+
+    const card = screen.getByTestId(CHRCTR_CARD_TEST_ID);
     expect(card).toBeInTheDocument();
 
     expect(getByText(card, character.name)).toBeInTheDocument();
@@ -48,14 +60,21 @@ describe('Click On A Card', () => {
   it('opens a detailed card component', async () => {
     server.use(...getHandlersByMockedArray([character]));
 
-    renderWithProviders(<App />);
+    const res = await getServerSideProps(gsspCtx());
 
-    const card = await screen.findByTestId(CHRCTR_CARD_TEST_ID);
+    render(<MainPage {...res.props} />);
+
+    const { push } = useRouter();
+
+    const card = screen.getByTestId(CHRCTR_CARD_TEST_ID);
     expect(card).toBeInTheDocument();
 
     await userEvent.click(card);
 
-    const details = await screen.findByTestId(CHRCTR_DTLS_TEST_ID);
-    expect(details).toBeInTheDocument();
+    expect(push).toHaveBeenCalledWith(
+      expect.objectContaining({ pathname: `/page/1/details/${character.id}` }),
+      `/page/1/details/${character.id}`,
+      expect.objectContaining({ scroll: false })
+    );
   });
 });
