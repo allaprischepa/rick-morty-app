@@ -5,6 +5,8 @@ import FormSubmit from '../../form-elements/FormSubmit';
 import { ValidationError } from 'yup';
 import FormElementCheckbox from '../../form-elements/FormElementCheckbox';
 import FormElementRadioCollection from '../../form-elements/FormElementRadioCollection';
+import FormElementAutocomplete from '../../form-elements/FormElementAutocomplete';
+import { useAppSelector } from '../../../state/store';
 
 interface FormErrors {
   [key: string]: string[];
@@ -12,6 +14,7 @@ interface FormErrors {
 
 function FormUC() {
   const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const countries = useAppSelector('countryList');
   const nameRef = useRef<HTMLInputElement>(null);
   const ageRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -20,6 +23,7 @@ function FormUC() {
   const genderRef = useRef<HTMLInputElement>(null);
   const acceptTCRef = useRef<HTMLInputElement>(null);
   const profilePictureRef = useRef<HTMLInputElement>(null);
+  const countryRef = useRef<HTMLInputElement>(null);
 
   const getFormData = () => {
     return {
@@ -31,6 +35,7 @@ function FormUC() {
       gender: genderRef.current?.value,
       acceptTC: acceptTCRef.current?.checked,
       profilePicture: profilePictureRef.current?.files,
+      country: countryRef.current?.value,
     };
   };
 
@@ -111,6 +116,15 @@ function FormUC() {
           ref: profilePictureRef,
         }}
         errors={formErrors.profilePicture}
+      />
+      <FormElementAutocomplete
+        label={formSettings.country.label}
+        inputProps={{
+          ...formSettings.country.inputProps,
+          ref: countryRef,
+        }}
+        autocompleteList={countries}
+        errors={formErrors.country}
       />
       <FormSubmit />
     </form>

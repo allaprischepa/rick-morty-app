@@ -1,7 +1,9 @@
 import { boolean, mixed, number, object, ref, string } from 'yup';
+import { store } from '../state/store';
 
 const FILE_SIZE_LIMIT = 2 * 1024 * 1024; // 2MB
 const FILE_TYPES = ['image/jpeg', 'image/png'];
+const countries = store.getState().countryList.value;
 
 export const formSettings = {
   name: {
@@ -103,6 +105,14 @@ export const formSettings = {
       accept: FILE_TYPES.join(','),
     },
   },
+  country: {
+    label: 'Country',
+    inputProps: {
+      type: 'text',
+      name: 'country',
+      id: 'country',
+    },
+  },
 };
 
 export const validationSchema = object().shape({
@@ -150,5 +160,10 @@ export const validationSchema = object().shape({
       (value) =>
         value instanceof FileList &&
         [...value].every((file: File) => FILE_TYPES.includes(file.type))
+    ),
+  country: string()
+    .required('Country field is required')
+    .test('countryName', 'Country must be choosen from the list', (value) =>
+      countries.includes(value)
     ),
 });
