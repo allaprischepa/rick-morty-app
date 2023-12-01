@@ -141,7 +141,7 @@ export const validationSchema = object().shape({
   confirmPassword: string().oneOf([ref('password')], 'Passwords must match'),
   gender: string().required('Gender field is required'),
   acceptTC: boolean().isTrue('You must accept the Terms & Conditions'),
-  profilePicture: mixed()
+  profilePicture: mixed<FileList>()
     .test(
       'required',
       'Profile picture field is required',

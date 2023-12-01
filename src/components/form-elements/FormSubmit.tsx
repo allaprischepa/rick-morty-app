@@ -1,9 +1,13 @@
 import FormElementContainer from './FormElementContainer';
 
-function FormSubmit() {
+interface Props {
+  disabled?: boolean;
+}
+
+function FormSubmit({ disabled }: Props) {
   return (
     <FormElementContainer>
-      <input type="submit" value="Submit" />
+      <input type="submit" value="Submit" disabled={disabled ?? false} />
     </FormElementContainer>
   );
 }

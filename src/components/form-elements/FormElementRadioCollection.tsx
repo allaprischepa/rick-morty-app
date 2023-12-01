@@ -12,17 +12,16 @@ function FormElementRadioCollection({
   radios,
   errors,
 }: Props) {
+  const { setValue, ...inputPropsRest } = inputProps;
   const handleRadio = (event: React.MouseEvent<HTMLInputElement>) => {
-    const { ref } = inputProps;
-
-    if (ref?.current && event.target instanceof HTMLInputElement) {
-      ref.current.value = event.target.value;
+    if (setValue && event.target instanceof HTMLInputElement) {
+      setValue(event.target.value);
     }
   };
 
   return (
     <FormElementContainer>
-      <input {...inputProps} />
+      <input {...inputPropsRest} />
       <label htmlFor={inputProps.id}>{label}</label>
       {radios.map((radio, key) => (
         <span key={key}>

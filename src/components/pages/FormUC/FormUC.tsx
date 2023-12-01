@@ -1,4 +1,4 @@
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, RefObject, useRef, useState } from 'react';
 import FormElementInput from '../../form-elements/FormElementInput';
 import { formSettings, validationSchema } from '../../../utils/form-settings';
 import FormSubmit from '../../form-elements/FormSubmit';
@@ -7,6 +7,7 @@ import FormElementCheckbox from '../../form-elements/FormElementCheckbox';
 import FormElementRadioCollection from '../../form-elements/FormElementRadioCollection';
 import FormElementAutocomplete from '../../form-elements/FormElementAutocomplete';
 import { useAppSelector } from '../../../state/store';
+import { FormDataWithUndefined } from '../../../utils/types';
 
 interface FormErrors {
   [key: string]: string[];
@@ -25,7 +26,7 @@ function FormUC() {
   const profilePictureRef = useRef<HTMLInputElement>(null);
   const countryRef = useRef<HTMLInputElement>(null);
 
-  const getFormData = () => {
+  const getFormData = (): FormDataWithUndefined => {
     return {
       name: nameRef.current?.value,
       age: ageRef.current?.value,
@@ -39,7 +40,8 @@ function FormUC() {
     };
   };
 
-  const onSuccess = () => {
+  const onSuccess = (formData: FormDataWithUndefined) => {
+    console.log(formData);
     setFormErrors({});
   };
 
@@ -58,11 +60,16 @@ function FormUC() {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
+    const formData = getFormData();
 
     validationSchema
       .validate(getFormData(), { abortEarly: false })
-      .then(() => onSuccess())
+      .then(() => onSuccess(formData))
       .catch((err: ValidationError) => onError(err));
+  };
+
+  const setValue = (val: string, ref: RefObject<HTMLInputElement>) => {
+    if (ref.current) ref.current.value = val;
   };
 
   return (
@@ -100,6 +107,7 @@ function FormUC() {
         inputProps={{
           ...formSettings.gender.inputProps,
           ref: genderRef,
+          setValue: (val: string) => setValue(val, genderRef),
         }}
         radios={formSettings.gender.radios}
         errors={formErrors.gender}
@@ -122,6 +130,7 @@ function FormUC() {
         inputProps={{
           ...formSettings.country.inputProps,
           ref: countryRef,
+          setValue: (val: string) => setValue(val, countryRef),
         }}
         autocompleteList={countries}
         errors={formErrors.country}

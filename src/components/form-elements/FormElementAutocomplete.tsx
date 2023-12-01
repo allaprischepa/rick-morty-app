@@ -6,6 +6,7 @@ import {
   KeyboardEvent,
   MouseEvent,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 
@@ -22,17 +23,29 @@ function FormElementAutocomplete({
   const [filteredValues, setFilteredValues] = useState<string[]>([]);
   const [active, setActive] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
-  const { ref } = inputProps;
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const { setValue, ...inputPropsRest } = inputProps;
 
   useEffect(() => {
     const handleClickOutside = (event: Event) => {
-      if (ref?.current && ref.current !== event.target) setIsVisible(false);
+      if (
+        event.target instanceof Node &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
+        setIsVisible(false);
+      }
     };
 
     document.addEventListener('click', handleClickOutside);
 
     return () => document.removeEventListener('click', handleClickOutside);
   });
+
+  const handleChange = (event: ChangeEvent) => {
+    if (inputProps.onChange) inputProps.onChange(event);
+    handleInputChangeClick(event);
+  };
 
   const handleInputChangeClick = (event: ChangeEvent | MouseEvent) => {
     if (event.target instanceof HTMLInputElement) {
@@ -45,13 +58,11 @@ function FormElementAutocomplete({
       setActive(0);
       setIsVisible(true);
       setFilteredValues(filtered);
-      ref?.current?.focus();
     }
   };
 
   const handleSelect = (val: string) => {
-    console.log(val);
-    if (ref?.current) ref.current.value = val;
+    if (setValue) setValue(val);
     setActive(0);
     setIsVisible(false);
     setFilteredValues([]);
@@ -60,7 +71,7 @@ function FormElementAutocomplete({
   const onKeyDown = (event: KeyboardEvent) => {
     if (event.code === 'Enter') {
       setIsVisible(false);
-      if (ref?.current) ref.current.value = filteredValues[active];
+      if (setValue) setValue(filteredValues[active]);
     } else if (event.key === 'ArrowUp') {
       return active === 0 ? null : setActive(active - 1);
     } else if (event.key === 'ArrowDown') {
@@ -92,27 +103,23 @@ function FormElementAutocomplete({
             })}
           </ul>
         );
-      } else {
-        return (
-          <div className="no-autocomplete">
-            <em>Not found</em>
-          </div>
-        );
-      }
+      } else return null;
     }
     return <></>;
   };
 
   return (
     <FormElementContainer>
-      <label htmlFor={inputProps.id}>{label}</label>
-      <input
-        {...inputProps}
-        onChange={handleInputChangeClick}
-        onClick={handleInputChangeClick}
-        onKeyDown={onKeyDown}
-      />
-      {renderAutocomplete()}
+      <div ref={dropdownRef}>
+        <label htmlFor={inputProps.id}>{label}</label>
+        <input
+          {...inputPropsRest}
+          onChange={handleChange}
+          onClick={handleInputChangeClick}
+          onKeyDown={onKeyDown}
+        />
+        {renderAutocomplete()}
+      </div>
       {errors?.length ? <ErrorMessage errors={errors} /> : null}
     </FormElementContainer>
   );
