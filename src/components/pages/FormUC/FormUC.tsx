@@ -8,12 +8,18 @@ import FormElementRadioCollection from '../../form-elements/FormElementRadioColl
 import FormElementAutocomplete from '../../form-elements/FormElementAutocomplete';
 import { useAppSelector } from '../../../state/store';
 import { FormDataWithUndefined } from '../../../utils/types';
+import { saveData, transformFormData } from '../../../utils/form-utils';
+import { useNavigate } from 'react-router-dom';
+import { AppRoutes } from '../../../router/router';
+import Layout from '../../Layout/Layout';
+import '../../../styles/form.scss';
 
 interface FormErrors {
   [key: string]: string[];
 }
 
 function FormUC() {
+  const navigate = useNavigate();
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const countries = useAppSelector('countryList');
   const nameRef = useRef<HTMLInputElement>(null);
@@ -29,7 +35,10 @@ function FormUC() {
   const getFormData = (): FormDataWithUndefined => {
     return {
       name: nameRef.current?.value,
-      age: ageRef.current?.value,
+      age:
+        ageRef.current?.value !== undefined
+          ? +ageRef.current?.value
+          : undefined,
       email: emailRef.current?.value,
       password: passwordRef.current?.value,
       confirmPassword: confirmPasswordRef.current?.value,
@@ -40,9 +49,11 @@ function FormUC() {
     };
   };
 
-  const onSuccess = (formData: FormDataWithUndefined) => {
-    console.log(formData);
+  const onSuccess = async (formData: FormDataWithUndefined) => {
+    const trasformedData = await transformFormData(formData);
+    saveData(trasformedData);
     setFormErrors({});
+    navigate(AppRoutes.MainPage);
   };
 
   const onError = (err: ValidationError) => {
@@ -73,70 +84,72 @@ function FormUC() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <FormElementInput
-        label={formSettings.name.label}
-        inputProps={{ ...formSettings.name.inputProps, ref: nameRef }}
-        errors={formErrors.name}
-      />
-      <FormElementInput
-        label={formSettings.age.label}
-        inputProps={{ ...formSettings.age.inputProps, ref: ageRef }}
-        errors={formErrors.age}
-      />
-      <FormElementInput
-        label={formSettings.email.label}
-        inputProps={{ ...formSettings.email.inputProps, ref: emailRef }}
-        errors={formErrors.email}
-      />
-      <FormElementInput
-        label={formSettings.password.label}
-        inputProps={{ ...formSettings.password.inputProps, ref: passwordRef }}
-        errors={formErrors.password}
-      />
-      <FormElementInput
-        label={formSettings.confirmPassword.label}
-        inputProps={{
-          ...formSettings.confirmPassword.inputProps,
-          ref: confirmPasswordRef,
-        }}
-        errors={formErrors.confirmPassword}
-      />
-      <FormElementRadioCollection
-        label={formSettings.gender.label}
-        inputProps={{
-          ...formSettings.gender.inputProps,
-          ref: genderRef,
-          setValue: (val: string) => setValue(val, genderRef),
-        }}
-        radios={formSettings.gender.radios}
-        errors={formErrors.gender}
-      />
-      <FormElementCheckbox
-        label={formSettings.acceptTC.label}
-        inputProps={{ ...formSettings.acceptTC.inputProps, ref: acceptTCRef }}
-        errors={formErrors.acceptTC}
-      />
-      <FormElementInput
-        label={formSettings.profilePicture.label}
-        inputProps={{
-          ...formSettings.profilePicture.inputProps,
-          ref: profilePictureRef,
-        }}
-        errors={formErrors.profilePicture}
-      />
-      <FormElementAutocomplete
-        label={formSettings.country.label}
-        inputProps={{
-          ...formSettings.country.inputProps,
-          ref: countryRef,
-          setValue: (val: string) => setValue(val, countryRef),
-        }}
-        autocompleteList={countries}
-        errors={formErrors.country}
-      />
-      <FormSubmit />
-    </form>
+    <Layout>
+      <form onSubmit={handleSubmit}>
+        <FormElementInput
+          label={formSettings.name.label}
+          inputProps={{ ...formSettings.name.inputProps, ref: nameRef }}
+          errors={formErrors.name}
+        />
+        <FormElementInput
+          label={formSettings.age.label}
+          inputProps={{ ...formSettings.age.inputProps, ref: ageRef }}
+          errors={formErrors.age}
+        />
+        <FormElementInput
+          label={formSettings.email.label}
+          inputProps={{ ...formSettings.email.inputProps, ref: emailRef }}
+          errors={formErrors.email}
+        />
+        <FormElementInput
+          label={formSettings.password.label}
+          inputProps={{ ...formSettings.password.inputProps, ref: passwordRef }}
+          errors={formErrors.password}
+        />
+        <FormElementInput
+          label={formSettings.confirmPassword.label}
+          inputProps={{
+            ...formSettings.confirmPassword.inputProps,
+            ref: confirmPasswordRef,
+          }}
+          errors={formErrors.confirmPassword}
+        />
+        <FormElementRadioCollection
+          label={formSettings.gender.label}
+          inputProps={{
+            ...formSettings.gender.inputProps,
+            ref: genderRef,
+            setValue: (val: string) => setValue(val, genderRef),
+          }}
+          radios={formSettings.gender.radios}
+          errors={formErrors.gender}
+        />
+        <FormElementInput
+          label={formSettings.profilePicture.label}
+          inputProps={{
+            ...formSettings.profilePicture.inputProps,
+            ref: profilePictureRef,
+          }}
+          errors={formErrors.profilePicture}
+        />
+        <FormElementAutocomplete
+          label={formSettings.country.label}
+          inputProps={{
+            ...formSettings.country.inputProps,
+            ref: countryRef,
+            setValue: (val: string) => setValue(val, countryRef),
+          }}
+          autocompleteList={countries}
+          errors={formErrors.country}
+        />
+        <FormElementCheckbox
+          label={formSettings.acceptTC.label}
+          inputProps={{ ...formSettings.acceptTC.inputProps, ref: acceptTCRef }}
+          errors={formErrors.acceptTC}
+        />
+        <FormSubmit />
+      </form>
+    </Layout>
   );
 }
 

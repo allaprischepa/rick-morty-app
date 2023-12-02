@@ -110,15 +110,19 @@ function FormElementAutocomplete({
 
   return (
     <FormElementContainer>
-      <div ref={dropdownRef}>
-        <label htmlFor={inputProps.id}>{label}</label>
-        <input
-          {...inputPropsRest}
-          onChange={handleChange}
-          onClick={handleInputChangeClick}
-          onKeyDown={onKeyDown}
-        />
-        {renderAutocomplete()}
+      <div className="field autocomplete" ref={dropdownRef}>
+        <div className="label">
+          <label htmlFor={inputProps.id}>{label}</label>
+        </div>
+        <div className="input">
+          <input
+            {...inputPropsRest}
+            onChange={handleChange}
+            onClick={handleInputChangeClick}
+            onKeyDown={onKeyDown}
+          />
+          {renderAutocomplete()}
+        </div>
       </div>
       {errors?.length ? <ErrorMessage errors={errors} /> : null}
     </FormElementContainer>

@@ -21,14 +21,20 @@ function FormElementRadioCollection({
 
   return (
     <FormElementContainer>
-      <input {...inputPropsRest} />
-      <label htmlFor={inputProps.id}>{label}</label>
-      {radios.map((radio, key) => (
-        <span key={key}>
-          <input {...radio.inputProps} onClick={handleRadio} />
-          <label htmlFor={radio.inputProps.id}>{radio.label}</label>
-        </span>
-      ))}
+      <div className="field">
+        <div className="label">
+          <label htmlFor={inputProps.id}>{label}</label>
+        </div>
+        <div className="input">
+          <input {...inputPropsRest} />
+          {radios.map((radio, key) => (
+            <span key={key}>
+              <input {...radio.inputProps} onClick={handleRadio} />
+              <label htmlFor={radio.inputProps.id}>{radio.label}</label>
+            </span>
+          ))}
+        </div>
+      </div>
       {errors?.length ? <ErrorMessage errors={errors} /> : null}
     </FormElementContainer>
   );

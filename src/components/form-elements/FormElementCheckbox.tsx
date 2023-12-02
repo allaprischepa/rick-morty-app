@@ -5,8 +5,12 @@ import { ElementInputProps } from '../../utils/types';
 function FormElementCheckbox({ label, inputProps, errors }: ElementInputProps) {
   return (
     <FormElementContainer>
-      <input {...inputProps} />
-      <label htmlFor={inputProps.id}>{label}</label>
+      <div className="field">
+        <div className="input">
+          <input {...inputProps} />
+          <label htmlFor={inputProps.id}>{label}</label>
+        </div>
+      </div>
       {errors?.length ? <ErrorMessage errors={errors} /> : null}
     </FormElementContainer>
   );

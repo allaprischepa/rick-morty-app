@@ -111,6 +111,7 @@ export const formSettings = {
       type: 'text',
       name: 'country',
       id: 'country',
+      autoComplete: 'off',
     },
   },
 };

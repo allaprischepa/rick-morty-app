@@ -8,6 +8,7 @@ export interface InputProps {
   ref?: RefObject<HTMLInputElement> | RefCallBack;
   placeholder?: string;
   required?: boolean;
+  autoComplete?: string;
   setValue?: (val: string) => void;
   onChange?: (event: ChangeEvent) => void;
 }
@@ -26,11 +27,27 @@ export interface FormData {
   confirmPassword: string;
   gender: string;
   acceptTC: boolean;
-  profilePicture: FileList;
+  profilePicture: FileList | null;
   country: string;
 }
 
-export type FormDataWithUndefined = Record<
-  keyof FormData,
-  FormData[keyof FormData] | undefined | null
->;
+export type FormDataWithUndefined = {
+  [K in keyof FormData]: FormData[K] | undefined;
+};
+
+export interface FormDataToSave
+  extends Omit<FormDataWithUndefined, 'profilePicture'> {
+  profilePicture: string;
+}
+
+export const formDataToSaveKeys: Array<keyof FormDataToSave> = [
+  'profilePicture',
+  'name',
+  'age',
+  'email',
+  'password',
+  'confirmPassword',
+  'gender',
+  'country',
+  'acceptTC',
+];
