@@ -1,0 +1,40 @@
+@import './abstracts/variables';
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+
+:root {
+  font-family: Ubuntu, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+body {
+  margin: 0;
+}
+
+nav {
+  ul {
+    display: flex;
+    list-style-type: none;
+    gap: 15px;
+    margin: 0;
+    padding: 10px 0;
+    justify-content: center;
+
+    li {
+      a {
+        display: block;
+        text-decoration: none;
+        color: $text-color;
+        font-weight: bold;
+
+        &:hover {
+          color: $main-color;
+        }
+
+        &.active {
+          color: $main-color;
+        }
+      }
+    }
+  }
+}
