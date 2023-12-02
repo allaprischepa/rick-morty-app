@@ -1,6 +1,7 @@
 @import './abstracts/variables';
 
 $input-height: 24px;
+$autocomplete-item-height: 24px;
 
 form {
   width: 500px;
@@ -60,7 +61,7 @@ form {
           margin: 0;
           padding: 0;
           width: 100%;
-          max-height: 300px;
+          max-height: calc($autocomplete-item-height * 10);
           overflow-y: auto;
           background: white;
           z-index: 199;

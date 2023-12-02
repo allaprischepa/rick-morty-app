@@ -25,6 +25,7 @@ function FormElementAutocomplete({
   const [isVisible, setIsVisible] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { setValue, ...inputPropsRest } = inputProps;
+  const autocompleteRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: Event) => {
@@ -38,6 +39,14 @@ function FormElementAutocomplete({
     };
 
     document.addEventListener('click', handleClickOutside);
+
+    if (autocompleteRef.current) {
+      if (active > 9) {
+        autocompleteRef.current.scrollTo({ top: 24 * (active - 9) });
+      } else {
+        autocompleteRef.current.scrollTo({ top: 0 });
+      }
+    }
 
     return () => document.removeEventListener('click', handleClickOutside);
   });
@@ -85,7 +94,7 @@ function FormElementAutocomplete({
     if (isVisible) {
       if (filteredValues.length) {
         return (
-          <ul className="autocompleteList">
+          <ul className="autocompleteList" ref={autocompleteRef}>
             {filteredValues.map((val, index) => {
               let className;
               if (index === active) {
