@@ -134,9 +134,18 @@ export const validationSchema = object().shape({
   password: string()
     .required('Password field is required')
     .min(8, 'Password must be at least 8 characters')
+    .matches(/^(?=.*\d)/, 'Password must contain at least 1 number')
     .matches(
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-      'Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character [@$!%*?&]'
+      /^(?=.*[A-Z])/,
+      'Password must contain at least 1 uppercase letter'
+    )
+    .matches(
+      /^(?=.*[a-z])/,
+      'Password must contain at least 1 lowercase letter'
+    )
+    .matches(
+      /^(?=.*[@$!%*?&])/,
+      'Password must contain at least 1 special character: @$!%*?&'
     ),
   confirmPassword: string().oneOf([ref('password')], 'Passwords must match'),
   gender: string().required('Gender field is required'),
