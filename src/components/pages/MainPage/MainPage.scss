@@ -1,0 +1,64 @@
+@import '../../../styles/abstracts/keyframes';
+
+$item-min-width: 300px;
+
+.results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax($item-min-width, 0.25fr));
+  gap: 10px;
+  padding: 5px;
+  justify-content: center;
+  box-sizing: border-box;
+
+  .results_item {
+    padding: 5px;
+    border: 1px solid $grey-color;
+    box-sizing: border-box;
+  }
+
+  .results_item_row {
+    display: flex;
+    gap: 10px;
+
+    .label {
+      opacity: 0.4;
+      justify-self: end;
+
+      &::after {
+        content: ':';
+      }
+    }
+
+    .data {
+      justify-self: start;
+      overflow-wrap: anywhere;
+      text-align: left;
+    }
+
+    img {
+      width: 100%;
+      max-width: 300px;
+    }
+
+    &.profilePicture {
+      grid-template-columns: auto;
+
+      .label {
+        display: none;
+      }
+
+      .data {
+        justify-self: center;
+      }
+    }
+  }
+}
+
+.no-results {
+  opacity: 0.45;
+  overflow-wrap: anywhere;
+}
+
+.highlight {
+  animation: shadowAnimation 1s infinite;
+}

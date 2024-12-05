@@ -1,0 +1,19 @@
+@import './variables';
+
+@keyframes shadowAnimation {
+  0% {
+    box-shadow: 0px 0px 0px 1.5px $secondary-color;
+  }
+  10% {
+    box-shadow: 0px 0px 0px 2px $secondary-color;
+  }
+  50% {
+    box-shadow: 0px 0px 0px 3px $secondary-color;
+  }
+  90% {
+    box-shadow: 0px 0px 0px 2px $secondary-color;
+  }
+  100% {
+    box-shadow: 0px 0px 0px 1.5px $secondary-color;
+  }
+}
