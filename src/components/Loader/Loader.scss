@@ -1,0 +1,24 @@
+@import '../../styles/abstract/variables';
+
+.loading {
+  position: fixed;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: $white-transparent;
+  z-index: 999;
+
+  &::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    content: '';
+    display: block;
+    height: 300px;
+    width: 300px;
+    background-image: url('../../assets/images/portal-rick-and-morty.gif');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
